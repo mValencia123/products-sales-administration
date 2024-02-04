@@ -5,14 +5,13 @@ import easysalesassistant.api.dto.TenantDTO;
 import easysalesassistant.api.entity.Provider;
 import easysalesassistant.api.entity.Tenant;
 import easysalesassistant.api.exceptions.NotFoundTenantException;
-import easysalesassistant.api.exceptions.RequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class TenantServiceImp implements ITenantService {
+public class ITenantServiceImp implements ITenantService {
 
     @Autowired
     ITenantDAO tenantDAO;
@@ -43,13 +42,17 @@ public class TenantServiceImp implements ITenantService {
     }
 
     @Override
-    public Tenant patchTenant(Long idTenant, Tenant tenant) {
+    public TenantDTO patchTenant(Long idTenant, TenantDTO tenant) {
         Tenant tenantFind = tenantDAO.findById(idTenant).orElse(null);
         if(tenantFind == null){
             throw new NotFoundTenantException(400,"tenant doesn't exists.");
         }
         tenantFind.setDescription(tenant.getDescription());
-        return tenantDAO.save(tenantFind);
+        tenantDAO.save(tenantFind);
+
+        TenantDTO tenantDTO = new TenantDTO();
+        tenantDTO.setDescription(tenantFind.getDescription());
+        return tenantDTO;
     }
 
 

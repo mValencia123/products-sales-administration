@@ -2,8 +2,7 @@ package easysalesassistant.api.controllers;
 
 import easysalesassistant.api.dto.TenantDTO;
 import easysalesassistant.api.entity.Provider;
-import easysalesassistant.api.entity.Tenant;
-import easysalesassistant.api.services.TenantServiceImp;
+import easysalesassistant.api.services.ITenantServiceImp;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +18,7 @@ import java.util.List;
 public class TenantController {
 
     @Autowired
-    TenantServiceImp tenantService;
+    ITenantServiceImp tenantService;
 
     @PostMapping( value = {"","/"})
     private ResponseEntity<TenantDTO> saveTenant(@Valid @RequestBody TenantDTO tenant){
@@ -39,7 +38,7 @@ public class TenantController {
     }
 
     @PatchMapping(value = "/{idTenant}")
-    private Tenant patchTenant(@PathVariable Long idTenant,@RequestBody Tenant tenant){
+    private TenantDTO patchTenant(@PathVariable Long idTenant,@RequestBody TenantDTO tenant){
         return tenantService.patchTenant(idTenant,tenant);
     }
 }
