@@ -42,14 +42,10 @@ public class ITenantServiceImp implements ITenantService {
     }
 
     @Override
-    public TenantDTO patchTenant(Long idTenant, TenantDTO tenant) {
-        Tenant tenantFind = tenantDAO.findById(idTenant).orElse(null);
-        if(tenantFind == null){
-            throw new NotFoundTenantException(400,"tenant doesn't exists.");
-        }
+    public TenantDTO updateTenant(TenantDTO tenant,Long idTenant) {
+        Tenant tenantFind = tenantDAO.findById(idTenant).orElseThrow(() -> new NotFoundTenantException(400,"tenant doesn't exists."));
         tenantFind.setDescription(tenant.getDescription());
         tenantDAO.save(tenantFind);
-
         TenantDTO tenantDTO = new TenantDTO();
         tenantDTO.setDescription(tenantFind.getDescription());
         return tenantDTO;

@@ -39,6 +39,6 @@ public class TenantController {
 
     @PatchMapping(value = "/{idTenant}")
     private TenantDTO patchTenant(@PathVariable Long idTenant,@RequestBody TenantDTO tenant){
-        return tenantService.patchTenant(idTenant,tenant);
+        return tenantService.updateTenant(tenant,idTenant);
     }
 }

@@ -1,7 +1,8 @@
 package easysalesassistant.api.controllers;
 
+import easysalesassistant.api.dto.ProviderDTO;
 import easysalesassistant.api.entity.Provider;
-import easysalesassistant.api.services.ProviderService;
+import easysalesassistant.api.services.IProviderServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProviderController {
 
     @Autowired
-    ProviderService providerService;
+    IProviderServiceImp providerService;
 
     @PostMapping(value = {"","/"})
-    public Provider save(@RequestBody Provider provider){
-        return providerService.save(provider);
+    public ProviderDTO save(@RequestBody ProviderDTO provider){
+        return providerService.saveProvider(provider);
     }
 }

@@ -1,7 +1,8 @@
 package easysalesassistant.api.controllers;
 
+import easysalesassistant.api.dto.StoreDTO;
 import easysalesassistant.api.entity.Store;
-import easysalesassistant.api.services.StoreService;
+import easysalesassistant.api.services.IStoreServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class StoreController {
 
     @Autowired
-    StoreService storeService;
+    IStoreServiceImp storeService;
 
     @PostMapping(value = {"/",""})
-    public Store save(@RequestBody Store store){
-        return storeService.save(store);
+    public StoreDTO save(@RequestBody StoreDTO store){
+        return storeService.saveStore(store);
     }
 }

@@ -10,5 +10,5 @@ public interface ITenantService {
     TenantDTO saveTenant(TenantDTO tenant);
     TenantDTO findTenantById(Long idTenant);
     List<Provider> getProvidersByTenant(Long idTenant);
-    TenantDTO patchTenant(Long idTenant, TenantDTO tenant);
+    TenantDTO updateTenant(TenantDTO tenant,Long idTenant);
 }

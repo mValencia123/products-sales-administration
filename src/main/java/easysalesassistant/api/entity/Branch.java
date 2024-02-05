@@ -25,7 +25,7 @@ public class Branch implements Serializable {
     @JoinColumn(name = "id_tenant")
     private Tenant idTenant;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="id_store")
     private Store idStore;
 }

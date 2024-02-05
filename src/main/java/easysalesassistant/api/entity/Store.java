@@ -29,6 +29,11 @@ public class Store implements Serializable {
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "idStore")
     private List<Stock> stock;
 
-    @OneToOne(mappedBy = "idStore")
-    private Branch idBranch;
+    //@OneToOne(mappedBy = "idStore")
+    /*@ManyToOne
+    @JoinColumn(name = "id_branch")
+    private Branch idBranch;*/
+
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "idStore")
+    private List<Branch> branch;
 }
