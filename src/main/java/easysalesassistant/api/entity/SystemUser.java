@@ -43,6 +43,10 @@ public class SystemUser implements Serializable {
     @Email
     private String email;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id_tenant")
+    private Tenant idTenant;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private List<Role> authorities;

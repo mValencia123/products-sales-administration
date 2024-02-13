@@ -1,6 +1,8 @@
 package easysalesassistant.api.filters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import easysalesassistant.api.dao.ITenantDAO;
+import easysalesassistant.api.entity.Tenant;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,6 +11,7 @@ import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 
 //@Component
 public class ValidationTenantFilter implements Filter {

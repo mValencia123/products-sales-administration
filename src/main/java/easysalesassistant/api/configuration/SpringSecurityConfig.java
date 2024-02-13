@@ -2,7 +2,7 @@ package easysalesassistant.api.configuration;
 
 import easysalesassistant.api.authentication.JWTAuthenticationFilter;
 import easysalesassistant.api.authentication.JWTAuthorizationFilter;
-import easysalesassistant.api.services.UserService;
+import easysalesassistant.api.services.ISystemUserServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +23,7 @@ public class SpringSecurityConfig {
     private String key;
 
     @Autowired
-    private UserService userDetailService;
+    private ISystemUserServiceImp userDetailService;
 
 
     @Bean

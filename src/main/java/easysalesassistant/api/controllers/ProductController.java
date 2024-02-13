@@ -3,7 +3,7 @@ package easysalesassistant.api.controllers;
 import easysalesassistant.api.dao.IProductDAO;
 import easysalesassistant.api.dto.ProductDTO;
 import easysalesassistant.api.entity.Product;
-import easysalesassistant.api.services.ProductService;
+import easysalesassistant.api.services.IProductServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +14,11 @@ import java.util.List;
 @RequestMapping(value = "/api/products",produces = {MediaType.APPLICATION_JSON_VALUE})
 public class ProductController {
 
-    @Autowired
-    private ProductService productService;
+    private IProductServiceImp productService;
+
+    ProductController(IProductServiceImp productService){
+        this.productService = productService;
+    }
 
     @GetMapping(value = {"/{id}"})
     public ProductDTO getProduct(@PathVariable(value = "id") Long id){
@@ -28,8 +31,8 @@ public class ProductController {
     }
 
     @PatchMapping(value = {"/{id}"})
-    public Product updateProduct(Product product){
-        return productService.updateProduct(product);
+    public ProductDTO updateProduct(ProductDTO product,@PathVariable(value = "id") Long id){
+        return productService.updateProduct(id,product);
     }
 
     @DeleteMapping(value = {"/{id}"})
@@ -38,7 +41,7 @@ public class ProductController {
     }
 
     @GetMapping(value = {"/",""})
-    public List<Product> getProducts(){
+    public List<ProductDTO> getProducts(){
         return productService.getProducts();
     }
 }

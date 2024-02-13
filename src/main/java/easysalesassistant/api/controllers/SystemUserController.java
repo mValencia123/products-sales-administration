@@ -1,7 +1,8 @@
 package easysalesassistant.api.controllers;
 
+import easysalesassistant.api.dto.SystemUserDTO;
 import easysalesassistant.api.entity.SystemUser;
-import easysalesassistant.api.services.UserService;
+import easysalesassistant.api.services.ISystemUserServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class SystemUserController {
 
     @Autowired
-    UserService userService;
+    ISystemUserServiceImp ISystemUserServiceImp;
 
     @PostMapping(value = {"","/"})
-    public SystemUser save(@RequestBody SystemUser employee){
-        return userService.save(employee);
+    public SystemUserDTO save(@RequestBody SystemUserDTO systemUserDTO){
+        return ISystemUserServiceImp.saveUser(systemUserDTO);
     }
 }
