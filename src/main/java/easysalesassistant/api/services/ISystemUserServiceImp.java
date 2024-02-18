@@ -59,9 +59,9 @@ public class ISystemUserServiceImp implements UserDetailsService, ISystemUserSer
 
     @Override
     public SystemUserDTO saveUser(SystemUserDTO systemUserDTO) {
+
         Tenant idTenant = tenantDAO.findById(systemUserDTO.getIdTenant())
                 .orElseThrow(() -> new NotFoundTenantException(400,"Tenant's ID doesn't exists."));
-
         String encodedPassword = passwordEncoder.encode(systemUserDTO.getPassword());
         SystemUser systemUser = new SystemUser();
 
@@ -72,6 +72,7 @@ public class ISystemUserServiceImp implements UserDetailsService, ISystemUserSer
         systemUser.setRfc(systemUserDTO.getRfc());
         systemUser.setPassword(encodedPassword);
         systemUser.setIdTenant(idTenant);
+        systemUser.setUserName(systemUserDTO.getUserName());
         userDao.save(systemUser);
 
         systemUserDTO.setPassword("");

@@ -1,8 +1,10 @@
 package easysalesassistant.api.exceptions;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class NotFoundCategoryException extends RuntimeException{
     private int code;
     private String message;
