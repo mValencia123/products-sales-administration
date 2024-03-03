@@ -1,9 +1,6 @@
 package easysalesassistant.api.controllers;
 
-import easysalesassistant.api.exceptions.NotFoundProviderException;
-import easysalesassistant.api.exceptions.NotFoundTenantException;
-import easysalesassistant.api.exceptions.ProductDoesntExistsException;
-import easysalesassistant.api.exceptions.RequestException;
+import easysalesassistant.api.exceptions.*;
 import easysalesassistant.api.exceptions.dto.ErrorExceptionDTO;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,6 +18,17 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class AdviceController extends ResponseEntityExceptionHandler {
+    @ExceptionHandler(value = NotEnoughStock.class)
+    public ResponseEntity<ErrorExceptionDTO> notEnoughStockExceptionHandler(NotEnoughStock ex){
+        ErrorExceptionDTO error = ErrorExceptionDTO.builder().message(ex.getMessage()).code(ex.getCode()).build();
+        return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = NotFoundStoreException.class)
+    public ResponseEntity<ErrorExceptionDTO> notFoundStoreExceptionHandler(NotFoundStoreException ex){
+        ErrorExceptionDTO error = ErrorExceptionDTO.builder().message(ex.getMessage()).code(ex.getCode()).build();
+        return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
+    }
 
     @ExceptionHandler(value = NotFoundProviderException.class)
     public ResponseEntity<ErrorExceptionDTO> notFoundProviderExceptionHandler(NotFoundProviderException ex){
