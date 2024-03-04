@@ -4,6 +4,7 @@ import easysalesassistant.api.dao.IProductDAO;
 import easysalesassistant.api.dto.ProductDTO;
 import easysalesassistant.api.entity.Product;
 import easysalesassistant.api.exceptions.ProductDoesntExistsException;
+import easysalesassistant.api.mappers.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,43 +17,45 @@ import java.util.stream.StreamSupport;
 
 @Service
 public class IProductServiceImp implements IProductService {
+    IProductDAO productDAO;
 
-    @Autowired
-    private IProductDAO productDAO;
-
-    private void fillDataProduct(ProductDTO productDTO, Product product){
-        product.setDescription(productDTO.getDescription());
-        product.setName(productDTO.getName());
-        product.setPrice(productDTO.getPrice());
-        product.setPublicPrice(productDTO.getPublicPrice());
-        product.setHasDiscount(productDTO.isHasDiscount());
-        product.setPiecesBox(productDTO.getPiecesBox());
-        productDAO.save(product);
+    IProductServiceImp(IProductDAO productDAO){
+        this.productDAO = productDAO;
     }
 
     public ProductDTO getProduct(Long id){
         Product product = productDAO.findById(id)
                 .orElseThrow(() -> new ProductDoesntExistsException(404,"Product doesn't exists with this Id."));
-        ProductDTO productDTO = new ProductDTO();
+        /*ProductDTO productDTO = new ProductDTO();
         productDTO.setDescription(product.getDescription());
         productDTO.setName(product.getName());
         productDTO.setPrice(product.getPrice());
         productDTO.setPublicPrice(product.getPublicPrice());
         productDTO.setHasDiscount(product.isHasDiscount());
-        productDTO.setPiecesBox(product.getPiecesBox());
+        productDTO.setPiecesBox(product.getPiecesBox());*/
+        ProductDTO productDTO = ProductMapper.INSTANCE.productToProductDTO(product);
         return productDTO;
     }
 
     public ProductDTO saveProduct(ProductDTO product){
-        Product p = new Product();
-        fillDataProduct(product,p);
+        Product p = ProductMapper.INSTANCE.productDTOToProduct(product);
+        productDAO.save(p);
         return product;
     }
 
     public ProductDTO updateProduct(Long id, ProductDTO product){
         Product p =  productDAO.findById(id).orElseThrow(() -> new ProductDoesntExistsException(400,"Product's ID doesn't exists."));
-        fillDataProduct(product,p);
-        return product;
+
+        p.setName(product.getName());
+        p.setDescription(product.getDescription());
+        p.setPrice(product.getPrice());
+        p.setPublicPrice(product.getPublicPrice());
+        p.setHasDiscount(product.isHasDiscount());
+        p.setPiecesBox(product.getPiecesBox());
+
+        productDAO.save(p);
+        ProductDTO productDTO = ProductMapper.INSTANCE.productToProductDTO(p);
+        return productDTO;
     }
 
     public void deleteProduct(Long id){
@@ -66,8 +69,7 @@ public class IProductServiceImp implements IProductService {
                         productDAO.findAll().iterator(),
                         Spliterator.ORDERED)
                 , false)
-                .map((p) ->
-                    new ProductDTO(p.getName(),p.getDescription(),p.getPrice(),p.getPublicPrice(),p.isHasDiscount(),p.getPiecesBox())
-                ).collect(Collectors.toList());
+                .map((p) -> ProductMapper.INSTANCE.productToProductDTO(p))
+                .collect(Collectors.toList());
     }
 }

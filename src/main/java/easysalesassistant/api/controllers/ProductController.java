@@ -3,6 +3,7 @@ package easysalesassistant.api.controllers;
 import easysalesassistant.api.dao.IProductDAO;
 import easysalesassistant.api.dto.ProductDTO;
 import easysalesassistant.api.entity.Product;
+import easysalesassistant.api.services.IProductService;
 import easysalesassistant.api.services.IProductServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -14,9 +15,9 @@ import java.util.List;
 @RequestMapping(value = "/api/products",produces = {MediaType.APPLICATION_JSON_VALUE})
 public class ProductController {
 
-    private IProductServiceImp productService;
+    private IProductService productService;
 
-    ProductController(IProductServiceImp productService){
+    ProductController(IProductService productService){
         this.productService = productService;
     }
 

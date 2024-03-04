@@ -32,7 +32,7 @@ public class ICategoryServiceImp implements ICategoryService{
     }
 
     @Override
-    public CategoryDTO updateCategory(CategoryDTO categoryDTO,Long idCategory) {
+    public CategoryDTO updateCategory(Long idCategory,CategoryDTO categoryDTO) {
         tenantDAO.findById(categoryDTO.getIdTenant()).orElseThrow(() -> new NotFoundTenantException(400,"Tentant's ID doesn't exists."));
 
         Category category = categoryDAO.findById(idCategory).orElseThrow(() -> new NotFoundCategoryException(400,"Category's ID doesn't exists."));

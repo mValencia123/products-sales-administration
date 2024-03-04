@@ -2,9 +2,8 @@ package easysalesassistant.api.controllers;
 
 import easysalesassistant.api.dto.TenantDTO;
 import easysalesassistant.api.entity.Provider;
-import easysalesassistant.api.services.ITenantServiceImp;
+import easysalesassistant.api.services.ITenantService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +15,11 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/api/tenant",produces = {MediaType.APPLICATION_JSON_VALUE})
 public class TenantController {
+    ITenantService tenantService;
 
-    @Autowired
-    ITenantServiceImp tenantService;
+    TenantController(ITenantService tenantService){
+        this.tenantService = tenantService;
+    }
 
     @PostMapping( value = {"","/"})
     private ResponseEntity<TenantDTO> saveTenant(@Valid @RequestBody TenantDTO tenant){
