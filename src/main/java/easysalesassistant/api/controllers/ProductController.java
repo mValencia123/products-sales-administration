@@ -1,11 +1,7 @@
 package easysalesassistant.api.controllers;
 
-import easysalesassistant.api.dao.IProductDAO;
-import easysalesassistant.api.dto.ProductDTO;
-import easysalesassistant.api.entity.Product;
+import easysalesassistant.api.dto.product.ProductDTO;
 import easysalesassistant.api.services.IProductService;
-import easysalesassistant.api.services.IProductServiceImp;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 

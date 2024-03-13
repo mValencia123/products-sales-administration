@@ -1,11 +1,11 @@
 package easysalesassistant.api.services;
 
-import easysalesassistant.api.dao.ITenantDAO;
+import easysalesassistant.api.context.UserContext;
 import easysalesassistant.api.dao.IUserDAO;
 import easysalesassistant.api.dto.SystemUserDTO;
 import easysalesassistant.api.entity.Role;
 import easysalesassistant.api.entity.SystemUser;
-import easysalesassistant.api.entity.Tenant;
+import easysalesassistant.api.exceptions.NotFoundSystemUserException;
 import easysalesassistant.api.exceptions.NotFoundTenantException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,12 +25,10 @@ import java.util.List;
 @Service
 public class ISystemUserServiceImp implements UserDetailsService, ISystemUserService {
     IUserDAO userDao;
-    ITenantDAO tenantDAO;
     BCryptPasswordEncoder passwordEncoder;
 
-    ISystemUserServiceImp(IUserDAO userDao, ITenantDAO tenantDAO, BCryptPasswordEncoder passwordEncoder){
+    ISystemUserServiceImp(IUserDAO userDao, BCryptPasswordEncoder passwordEncoder){
         this.userDao = userDao;
-        this.tenantDAO = tenantDAO;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -59,20 +57,23 @@ public class ISystemUserServiceImp implements UserDetailsService, ISystemUserSer
 
     @Override
     public SystemUserDTO saveUser(SystemUserDTO systemUserDTO) {
+        SystemUser systemUserCreated = userDao.findByUserName(UserContext.getCurrentUser());
 
-        Tenant idTenant = tenantDAO.findById(systemUserDTO.getIdTenant())
-                .orElseThrow(() -> new NotFoundTenantException(400,"Tenant's ID doesn't exists."));
+        if(systemUserCreated == null){
+            throw new NotFoundSystemUserException(404,"User doesn't exists.");
+        }
+
         String encodedPassword = passwordEncoder.encode(systemUserDTO.getPassword());
-        SystemUser systemUser = new SystemUser();
 
-        systemUser.setName(systemUserDTO.getName());
+        SystemUser systemUser = new SystemUser();
+        systemUser.setFirstName(systemUserDTO.getName());
         systemUser.setLastName(systemUserDTO.getLastName());
         systemUser.setEmail(systemUserDTO.getEmail());
         systemUser.setEnabled(true);
         systemUser.setRfc(systemUserDTO.getRfc());
         systemUser.setPassword(encodedPassword);
-        systemUser.setIdTenant(idTenant);
         systemUser.setUserName(systemUserDTO.getUserName());
+        systemUser.setIdUserCreated(systemUserCreated);
         userDao.save(systemUser);
 
         systemUserDTO.setPassword("");

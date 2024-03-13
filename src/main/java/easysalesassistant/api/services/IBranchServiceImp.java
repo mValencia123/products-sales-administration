@@ -2,16 +2,13 @@ package easysalesassistant.api.services;
 
 import easysalesassistant.api.dao.IBranchDAO;
 import easysalesassistant.api.dao.IStoreDAO;
-import easysalesassistant.api.dao.ITenantDAO;
 import easysalesassistant.api.dto.BranchDTO;
 import easysalesassistant.api.dto.BranchGetDTO;
 import easysalesassistant.api.entity.Branch;
 import easysalesassistant.api.entity.Store;
-import easysalesassistant.api.entity.Tenant;
 import easysalesassistant.api.exceptions.NotFoundBranchException;
 import easysalesassistant.api.exceptions.NotFoundStoreException;
 import easysalesassistant.api.exceptions.NotFoundTenantException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,27 +16,22 @@ public class IBranchServiceImp implements IBranchService{
 
     IBranchDAO branchDAO;
     IStoreDAO storeDAO;
-    ITenantDAO tenantDAO;
 
-    IBranchServiceImp(IBranchDAO branchDAO, IStoreDAO storeDAO, ITenantDAO tenantDAO){
+    IBranchServiceImp(IBranchDAO branchDAO, IStoreDAO storeDAO){
         this.branchDAO = branchDAO;
         this.storeDAO = storeDAO;
-        this.tenantDAO = tenantDAO;
     }
 
     @Override
     public void saveBranch(BranchDTO branchDTO) {
-        Tenant tenant = tenantDAO.findById(branchDTO.getIdTenant()).orElseThrow(() -> new NotFoundTenantException(404,"Tenant's ID doesnt exists."));
         Branch branch = new Branch();
         if(branchDTO.getIdStore() == null){
             Store store = new Store();
             store.setDescription(branchDTO.getDescription());
-            store.setIdTenant(tenant);
             store = storeDAO.save(store);
             branch.setIdStore(store);
         }
         branch.setDescription(branchDTO.getDescription());
-        branch.setIdTenant(tenant);
         branchDAO.save(branch);
     }
 

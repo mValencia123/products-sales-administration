@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -29,7 +30,7 @@ public class SystemUser implements Serializable {
 
     @Column(length = 25)
     @NotBlank(message = "Name must not be empty")
-    private String name;
+    private String firstName;
 
     @Column(length = 18)
     private String rfc;
@@ -43,13 +44,19 @@ public class SystemUser implements Serializable {
     @Email
     private String email;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "id_tenant")
-    private Tenant idTenant;
+    private boolean enabled = true;
+
+    @ManyToOne
+    private SystemUser idUserCreated;
+
+    private Date createdAt;
+
+    private Date deletedAt;
+
+    @ManyToOne
+    private SystemUser idUserDeleted;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private List<Role> authorities;
-
-    private boolean enabled;
 }

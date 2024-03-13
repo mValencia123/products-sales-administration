@@ -22,10 +22,22 @@ public class Branch implements Serializable {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "id_tenant")
-    private Tenant idTenant;
-
-    @ManyToOne
     @JoinColumn(name="id_store")
     private Store idStore;
+
+    @ManyToOne
+    @JoinColumn(name="id_state")
+    private State idState;
+
+    @ManyToOne
+    @JoinColumn(name="id_city")
+    private City idCity;
+
+    private String street;
+
+    private Long number;
+
+    private Long postalCode;
+
+    private String suburb;
 }

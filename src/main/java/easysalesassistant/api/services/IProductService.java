@@ -1,7 +1,6 @@
 package easysalesassistant.api.services;
 
-import easysalesassistant.api.dto.ProductDTO;
-import easysalesassistant.api.entity.Product;
+import easysalesassistant.api.dto.product.ProductDTO;
 
 import java.util.List;
 

@@ -1,6 +1,7 @@
 package easysalesassistant.api.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,8 +9,7 @@ import java.io.Serializable;
 
 @Entity
 @Table( name = "sells")
-@Setter
-@Getter
+@Data
 public class Sell implements Serializable {
 
     @Id

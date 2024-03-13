@@ -34,11 +34,26 @@ public class AuthenticationService {
         }
         String tenant = Jwts.parser()
                 .setSigningKey(SIGNINGKEY)
-                .build().parseClaimsJws(token.replace(PREFIX, "").trim())
+                .build()
+                .parseClaimsJws(token.replace(PREFIX, "").trim())
                 .getBody()
                 .getAudience()
                 .iterator()
                 .next();
         return tenant;
+    }
+
+    public static String getUserName(HttpServletRequest req) {
+        String token = req.getHeader("Authorization");
+
+        if (token == null) {
+            return null;
+        }
+        String userName = Jwts.parser()
+                .setSigningKey(SIGNINGKEY)
+                .build().parseClaimsJws(token.replace(PREFIX, "").trim())
+                .getBody()
+                .getSubject();
+        return userName;
     }
 }

@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -26,12 +28,20 @@ public class Category implements Serializable {
     @NotBlank(message = "Description of category must not be empty")
     private String description;
 
-    @JsonBackReference(value = "categories-tenants")
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "id_tenant")
-    private Tenant idTenant;
+    @ManyToOne()
+    @JoinColumn(name = "id_user_created")
+    private SystemUser idUserCreated;
 
-    @JsonManagedReference(value = "products-categories")
+    private Date createdAt;
+
+    @ManyToOne()
+    @JoinColumn(name = "id_user_deleted")
+    private SystemUser idUserDeleted;
+
+    private Date deletedAt;
+
+    private boolean deleted = false;
+
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "idCategory")
     private List<Product> products;
 }

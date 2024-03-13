@@ -23,16 +23,23 @@ public class Store implements Serializable {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "id_tenant")
-    private Tenant idTenant;
+    @JoinColumn(name="id_state")
+    private State idState;
+
+    @ManyToOne
+    @JoinColumn(name="id_city")
+    private City idCity;
+
+    private String street;
+
+    private Long number;
+
+    private Long postalCode;
+
+    private String suburb;
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "idStore")
     private List<Stock> stock;
-
-    //@OneToOne(mappedBy = "idStore")
-    /*@ManyToOne
-    @JoinColumn(name = "id_branch")
-    private Branch idBranch;*/
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "idStore")
     private List<Branch> branch;

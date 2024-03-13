@@ -1,15 +1,11 @@
 package easysalesassistant.api.services;
 
 import easysalesassistant.api.dao.*;
-import easysalesassistant.api.dto.ProductDTO;
 import easysalesassistant.api.dto.SellDTO;
-import easysalesassistant.api.dto.SellProductDTO;
 import easysalesassistant.api.entity.*;
-import easysalesassistant.api.exceptions.NotEnoughStock;
 import easysalesassistant.api.exceptions.NotFoundBranchException;
 import easysalesassistant.api.exceptions.NotFoundStoreException;
 import easysalesassistant.api.exceptions.ProductDoesntExistsException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

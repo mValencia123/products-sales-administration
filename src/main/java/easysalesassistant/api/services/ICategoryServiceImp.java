@@ -1,40 +1,40 @@
 package easysalesassistant.api.services;
 
 import easysalesassistant.api.dao.ICategoryDAO;
-import easysalesassistant.api.dao.ITenantDAO;
+import easysalesassistant.api.dao.IUserDAO;
 import easysalesassistant.api.dto.CategoryDTO;
 import easysalesassistant.api.entity.Category;
-import easysalesassistant.api.entity.Tenant;
+import easysalesassistant.api.entity.SystemUser;
 import easysalesassistant.api.exceptions.NotFoundCategoryException;
+import easysalesassistant.api.exceptions.NotFoundSystemUserException;
 import easysalesassistant.api.exceptions.NotFoundTenantException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ICategoryServiceImp implements ICategoryService{
 
     ICategoryDAO categoryDAO;
-    ITenantDAO tenantDAO;
+    IUserDAO systemUserDAO;
 
-    public ICategoryServiceImp(ICategoryDAO categoryDAO, ITenantDAO tenantDAO){
-        this.categoryDAO = categoryDAO;
-        this.tenantDAO   = tenantDAO;
+    public ICategoryServiceImp(ICategoryDAO categoryDAO,IUserDAO systemUserDAO){
+        this.categoryDAO   = categoryDAO;
+        this.systemUserDAO = systemUserDAO;
     }
 
     @Override
     public CategoryDTO saveCategory(CategoryDTO categoryDTO) {
-        Tenant tenant = tenantDAO.findById(categoryDTO.getIdTenant()).orElseThrow(() -> new NotFoundTenantException(400,"Tentant's ID doesn't exists."));
+        SystemUser user = systemUserDAO.findById(categoryDTO.getIdUser()).orElseThrow(() -> new NotFoundSystemUserException(404,"System User's ID doesn't exists."));
+
         Category category = new Category();
         category.setDescription(categoryDTO.getDescription());
-        category.setIdTenant(tenant);
+        category.setIdUserCreated(user);
         categoryDAO.save(category);
+
         return categoryDTO;
     }
 
     @Override
     public CategoryDTO updateCategory(Long idCategory,CategoryDTO categoryDTO) {
-        tenantDAO.findById(categoryDTO.getIdTenant()).orElseThrow(() -> new NotFoundTenantException(400,"Tentant's ID doesn't exists."));
-
         Category category = categoryDAO.findById(idCategory).orElseThrow(() -> new NotFoundCategoryException(400,"Category's ID doesn't exists."));
         category.setDescription(categoryDTO.getDescription());
         categoryDAO.save(category);

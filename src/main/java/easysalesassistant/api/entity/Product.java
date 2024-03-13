@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 
@@ -31,24 +32,33 @@ public class Product implements Serializable {
     @Column(precision = 2)
     private float publicPrice;
 
-    private boolean hasDiscount;
+    private boolean hasDiscount = true;
 
     private int piecesBox;
 
-    @JsonBackReference(value = "products-providers")
-    @ManyToOne(optional = false)
+    private boolean visible = true;
+
+    private boolean deleted = false;
+
+    private Date createdAt;
+
+    private Date deletedAt;
+
+    @ManyToOne()
+    @JoinColumn(name = "id_user_created")
+    private SystemUser userCreated;
+
+    @ManyToOne()
+    @JoinColumn(name = "id_user_deleted")
+    private SystemUser userDeleted;
+
+    @ManyToOne()
     @JoinColumn(name = "id_provider")
     private Provider idProvider;
 
-    @JsonBackReference(value = "products-categories")
-    @ManyToOne(optional = false)
+    @ManyToOne()
     @JoinColumn(name = "id_category")
     private Category idCategory;
-
-    @JsonBackReference(value = "products-tenants")
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "id_tenant")
-    private Tenant idTenant;
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "idProduct")
     private List<Stock> stock;

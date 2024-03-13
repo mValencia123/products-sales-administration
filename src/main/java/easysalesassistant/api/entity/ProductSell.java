@@ -1,5 +1,6 @@
 package easysalesassistant.api.entity;
 
+import easysalesassistant.api.enums.Type;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,5 +30,8 @@ public class ProductSell implements Serializable {
     @Column(precision = 2)
     private float priceProduct;
 
-    private int amount;
+    private Long amount;
+
+    @Enumerated(EnumType.STRING)
+    private Type type;
 }

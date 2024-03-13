@@ -1,18 +1,16 @@
 package easysalesassistant.api.services;
 
 import easysalesassistant.api.dao.IProductDAO;
-import easysalesassistant.api.dto.ProductDTO;
+import easysalesassistant.api.dto.product.ProductDTO;
 import easysalesassistant.api.entity.Product;
 import easysalesassistant.api.exceptions.ProductDoesntExistsException;
 import easysalesassistant.api.mappers.ProductMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -26,13 +24,7 @@ public class IProductServiceImp implements IProductService {
     public ProductDTO getProduct(Long id){
         Product product = productDAO.findById(id)
                 .orElseThrow(() -> new ProductDoesntExistsException(404,"Product doesn't exists with this Id."));
-        /*ProductDTO productDTO = new ProductDTO();
-        productDTO.setDescription(product.getDescription());
-        productDTO.setName(product.getName());
-        productDTO.setPrice(product.getPrice());
-        productDTO.setPublicPrice(product.getPublicPrice());
-        productDTO.setHasDiscount(product.isHasDiscount());
-        productDTO.setPiecesBox(product.getPiecesBox());*/
+
         ProductDTO productDTO = ProductMapper.INSTANCE.productToProductDTO(product);
         return productDTO;
     }

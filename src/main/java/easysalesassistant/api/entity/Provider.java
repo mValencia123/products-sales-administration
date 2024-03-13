@@ -22,14 +22,29 @@ public class Provider implements Serializable {
     private Long id;
 
     @Column(length = 50)
-    private String description;
+    private String firstName;
 
-    @JsonBackReference(value = "providers-tenants")
-    @ManyToOne(optional = false,fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_tenant")
-    private Tenant idTenant;
+    @Column(length = 50)
+    private String lastName;
 
-    @JsonManagedReference(value = "products-providers")
+    private String rfc;
+
+    @ManyToOne
+    @JoinColumn(name="id_state")
+    private State idState;
+
+    @ManyToOne
+    @JoinColumn(name="id_city")
+    private City idCity;
+
+    private String street;
+
+    private Long number;
+
+    private Long postalCode;
+
+    private String suburb;
+
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "idProvider")
     private List<Product> products;
 }
