@@ -24,12 +24,15 @@ import java.util.List;
 
 @Service
 public class ISystemUserServiceImp implements UserDetailsService, ISystemUserService {
-    IUserDAO userDao;
+    IUserDAO userDAO;
     BCryptPasswordEncoder passwordEncoder;
 
-    ISystemUserServiceImp(IUserDAO userDao, BCryptPasswordEncoder passwordEncoder){
-        this.userDao = userDao;
+    ISystemUserService userService;
+
+    ISystemUserServiceImp(IUserDAO userDao, BCryptPasswordEncoder passwordEncoder,ISystemUserService userService){
+        this.userDAO = userDao;
         this.passwordEncoder = passwordEncoder;
+        this.userService = userService;
     }
 
     private Logger logger = LoggerFactory.getLogger(ISystemUserServiceImp.class);
@@ -38,9 +41,7 @@ public class ISystemUserServiceImp implements UserDetailsService, ISystemUserSer
     @Transactional(readOnly = false)
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println(username);
-        SystemUser user = userDao.findByUserName(username);
-
+        SystemUser user = userDAO.findByUserName(username);
         if (user == null){
             logger.error("Usurio nullo");
             throw new UsernameNotFoundException("Usuario no encontrado");
@@ -57,12 +58,7 @@ public class ISystemUserServiceImp implements UserDetailsService, ISystemUserSer
 
     @Override
     public SystemUserDTO saveUser(SystemUserDTO systemUserDTO) {
-        SystemUser systemUserCreated = userDao.findByUserName(UserContext.getCurrentUser());
-
-        if(systemUserCreated == null){
-            throw new NotFoundSystemUserException(404,"User doesn't exists.");
-        }
-
+        SystemUser systemUserCreated = userService.getUserByContext();
         String encodedPassword = passwordEncoder.encode(systemUserDTO.getPassword());
 
         SystemUser systemUser = new SystemUser();
@@ -74,9 +70,16 @@ public class ISystemUserServiceImp implements UserDetailsService, ISystemUserSer
         systemUser.setPassword(encodedPassword);
         systemUser.setUserName(systemUserDTO.getUserName());
         systemUser.setIdUserCreated(systemUserCreated);
-        userDao.save(systemUser);
+        userDAO.save(systemUser);
 
         systemUserDTO.setPassword("");
         return systemUserDTO;
+    }
+
+    @Override
+    public SystemUser getUserByContext() {
+        SystemUser systemUser = userDAO.findByUserName(UserContext.getCurrentUser());
+        if(systemUser == null) throw new NotFoundSystemUserException(404,"System user doesn't exists.");
+        return systemUser;
     }
 }

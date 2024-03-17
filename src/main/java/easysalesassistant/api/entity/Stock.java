@@ -16,6 +16,8 @@ public class Stock implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long amount;
+
     @ManyToOne
     @JoinColumn( name = "id_product")
     private Product idProduct;
@@ -23,6 +25,4 @@ public class Stock implements Serializable {
     @ManyToOne
     @JoinColumn( name = "id_store")
     private Store idStore;
-
-    private Long amount;
 }

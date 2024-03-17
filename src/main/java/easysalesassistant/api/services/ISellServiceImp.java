@@ -4,8 +4,8 @@ import easysalesassistant.api.dao.*;
 import easysalesassistant.api.dto.SellDTO;
 import easysalesassistant.api.entity.*;
 import easysalesassistant.api.exceptions.NotFoundBranchException;
+import easysalesassistant.api.exceptions.NotFoundProductException;
 import easysalesassistant.api.exceptions.NotFoundStoreException;
-import easysalesassistant.api.exceptions.ProductDoesntExistsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,11 +35,11 @@ public class ISellServiceImp implements ISellService{
             throw new NotFoundStoreException(400,"Branch doesn't have a linked store.");
         }
         sellDTO.getProductsSell().forEach((p) -> {
-            Product product = productDAO.findById(p.getIdProduct()).orElseThrow(() -> new ProductDoesntExistsException(404,"Doens't exists product validating stocks."));
+            Product product = productDAO.findById(p.getIdProduct()).orElseThrow(() -> new NotFoundProductException(404,"Doens't exists product validating stocks."));
             stockService.productHasStockAt(product,idStore,p.getAmount());
         });
         sellDTO.getProductsSell().forEach((p) -> {
-            Product product = productDAO.findById(p.getIdProduct()).orElseThrow(() -> new ProductDoesntExistsException(404,"Doens't exists product reducing stocks."));
+            Product product = productDAO.findById(p.getIdProduct()).orElseThrow(() -> new NotFoundProductException(404,"Doens't exists product reducing stocks."));
             stockService.reduceStockOfProductAt(product,idStore,p.getAmount());
         });
     }

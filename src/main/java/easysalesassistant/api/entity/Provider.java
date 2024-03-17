@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -29,21 +30,23 @@ public class Provider implements Serializable {
 
     private String rfc;
 
-    @ManyToOne
-    @JoinColumn(name="id_state")
-    private State idState;
+    private boolean deleted = false;
+
+    private Date deletedAt;
+
+    private Date createdAt;
 
     @ManyToOne
-    @JoinColumn(name="id_city")
-    private City idCity;
+    @JoinColumn(name = "id_user_created")
+    private SystemUser idUserCreated;
 
-    private String street;
+    @ManyToOne
+    @JoinColumn(name = "id_user_deleted")
+    private SystemUser idUserDeleted;
 
-    private Long number;
-
-    private Long postalCode;
-
-    private String suburb;
+    @OneToOne
+    @JoinColumn(name="id_address")
+    private Address idAddress;
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "idProvider")
     private List<Product> products;

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Table(name = "branches")
@@ -21,23 +22,17 @@ public class Branch implements Serializable {
     @Column(length = 30)
     private String description;
 
+    private Date createdAt;
+
+    private Long phoneNumber;
+
+    private boolean allowSellNegativeStock;
+
     @ManyToOne
     @JoinColumn(name="id_store")
     private Store idStore;
 
-    @ManyToOne
-    @JoinColumn(name="id_state")
-    private State idState;
-
-    @ManyToOne
-    @JoinColumn(name="id_city")
-    private City idCity;
-
-    private String street;
-
-    private Long number;
-
-    private Long postalCode;
-
-    private String suburb;
+    @OneToOne
+    @JoinColumn(name="id_address")
+    private Address idAddress;
 }

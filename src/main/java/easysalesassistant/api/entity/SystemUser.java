@@ -1,11 +1,13 @@
 package easysalesassistant.api.entity;
 
+import easysalesassistant.api.enums.Gender;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -46,15 +48,34 @@ public class SystemUser implements Serializable {
 
     private boolean enabled = true;
 
-    @ManyToOne
-    private SystemUser idUserCreated;
-
     private Date createdAt;
 
     private Date deletedAt;
 
+    private String photo;
+
+    private Long phoneNumber;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    private Date birthday;
+
     @ManyToOne
+    @JoinColumn(name="id_branch")
+    private Branch idBranch;
+
+    @ManyToOne
+    @JoinColumn(name="id_user_created")
+    private SystemUser idUserCreated;
+
+    @ManyToOne
+    @JoinColumn(name="id_user_deleted")
     private SystemUser idUserDeleted;
+
+    @OneToOne
+    @JoinColumn(name="id_address")
+    private Address idAddress;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")

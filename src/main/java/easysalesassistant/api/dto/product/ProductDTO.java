@@ -10,13 +10,19 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductDTO {
-    private Long idProduct;
+    private Long id;
+    private String itemCode;
+    private String barCode;
     private String name;
     private String description;
-    private float price;
-    private float publicPrice;
+    private float cost;
+    private float wholesalePrice;
+    private float retailPrice;
+    private String photo;
     private boolean hasDiscount;
     private int piecesBox;
     private Date createdAt;
     private Date deletedAt;
+    private Long idProvider;
+    private Long idCategory;
 }

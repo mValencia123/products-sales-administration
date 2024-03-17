@@ -1,8 +1,12 @@
 package easysalesassistant.api.services;
 
-import easysalesassistant.api.dto.ProviderDTO;
+import easysalesassistant.api.dto.provider.ProviderDTO;
+import easysalesassistant.api.entity.Provider;
 
 public interface IProviderService {
     ProviderDTO saveProvider(ProviderDTO providerDTO);
-    ProviderDTO updaterProvider(ProviderDTO providerDTO, Long idProvider);
+    ProviderDTO getProviderById(Long id);
+    ProviderDTO patchProvider(Long id, ProviderDTO provider);
+    void deleteProvider(Long id);
+    Provider existsProviderById(Long id);
 }

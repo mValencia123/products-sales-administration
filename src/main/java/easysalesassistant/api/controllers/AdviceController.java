@@ -36,8 +36,8 @@ public class AdviceController extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(value = ProductDoesntExistsException.class)
-    public ResponseEntity<ErrorExceptionDTO> productDoesntExistsExceptionHandler(ProductDoesntExistsException ex){
+    @ExceptionHandler(value = NotFoundProductException.class)
+    public ResponseEntity<ErrorExceptionDTO> productDoesntExistsExceptionHandler(NotFoundProductException ex){
         ErrorExceptionDTO error = ErrorExceptionDTO.builder().message(ex.getMessage()).code(ex.getCode()).build();
         return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
     }

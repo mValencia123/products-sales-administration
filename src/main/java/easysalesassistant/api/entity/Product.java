@@ -21,22 +21,31 @@ public class Product implements Serializable {
     private Long id;
 
     @Column(length = 30)
+    private String itemCode;
+
+    @Column(length = 100)
+    private String barCode;
+
+    @Column(length = 30)
     private String name;
 
     @Column(length = 60)
     private String description;
 
     @Column(precision = 2)
-    private float price;
+    private float cost;
 
     @Column(precision = 2)
-    private float publicPrice;
+    private float wholesalePrice;
+
+    @Column(precision = 2)
+    private float retailPrice;
+
+    private String photo;
 
     private boolean hasDiscount = true;
 
     private int piecesBox;
-
-    private boolean visible = true;
 
     private boolean deleted = false;
 
@@ -46,11 +55,11 @@ public class Product implements Serializable {
 
     @ManyToOne()
     @JoinColumn(name = "id_user_created")
-    private SystemUser userCreated;
+    private SystemUser idUserCreated;
 
     @ManyToOne()
     @JoinColumn(name = "id_user_deleted")
-    private SystemUser userDeleted;
+    private SystemUser idUserDeleted;
 
     @ManyToOne()
     @JoinColumn(name = "id_provider")

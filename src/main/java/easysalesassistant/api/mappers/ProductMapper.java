@@ -11,7 +11,6 @@ import org.mapstruct.factory.Mappers;
 public interface ProductMapper {
     ProductMapper INSTANCE = Mappers.getMapper( ProductMapper.class );
 
-    @Mapping(source = "id",target = "idProduct")
     ProductDTO productToProductDTO(Product product);
     @InheritInverseConfiguration
     Product productDTOToProduct(ProductDTO productDTO);
