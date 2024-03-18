@@ -1,8 +1,10 @@
 package easysalesassistant.api.services;
 
-import easysalesassistant.api.dto.StoreDTO;
+import easysalesassistant.api.dto.store.StoreDTO;
+import easysalesassistant.api.entity.Store;
 
 public interface IStoreService {
     StoreDTO saveStore(StoreDTO storeDTO);
-    StoreDTO updateStore(StoreDTO storeDTO, Long idStore);
+    StoreDTO updateStore(Long idStore,StoreDTO storeDTO);
+    Store existsStoreById(Long idStore);
 }

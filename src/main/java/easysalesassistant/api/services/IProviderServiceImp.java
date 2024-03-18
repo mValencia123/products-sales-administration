@@ -50,18 +50,19 @@ public class IProviderServiceImp implements IProviderService {
     }
 
     @Override
-    public ProviderDTO getProviderById(Long id) {
-        Provider provider = providerDAO.findById(id).orElseThrow(() -> new NotFoundProviderException(404,"Provider's ID doesn't exists."));
+    public ProviderDTO getProviderDTOById(Long id) {
+        Provider provider = existsProviderById(id);
         return ProviderMapper.INSTANCE.providerToProviderDTO(provider);
     }
-
     @Override
     public void deleteProvider(Long id) {
         Provider provider = existsProviderById(id);
         SystemUser systemUser = userService.getUserByContext();
+
         provider.setDeleted(true);
         provider.setDeletedAt(new Date());
         provider.setIdUserDeleted(systemUser);
+
         providerDAO.save(provider);
     }
 

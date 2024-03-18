@@ -1,12 +1,14 @@
 package easysalesassistant.api.services;
 
-import easysalesassistant.api.dto.BranchDTO;
-import easysalesassistant.api.dto.BranchGetDTO;
+import easysalesassistant.api.dto.branch.BranchDTO;
+import easysalesassistant.api.dto.branch.BranchGetDTO;
 
 public interface IBranchService {
-    void saveBranch(BranchDTO branchDTO);
+    BranchDTO saveBranch(BranchDTO branchDTO);
 
     BranchGetDTO getBranchById(Long idBranch);
 
     BranchGetDTO updateBranch(Long idBranch, BranchDTO branch);
+
+    void deleteBranch(Long idBranch);
 }

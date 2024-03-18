@@ -22,22 +22,22 @@ import java.util.stream.StreamSupport;
 public class IProductServiceImp implements IProductService {
     IProductDAO productDAO;
     ISystemUserService userService;
+    ProductMapper productMapper;
 
-    IProductServiceImp(IProductDAO productDAO, ISystemUserService userService){
+    IProductServiceImp(IProductDAO productDAO, ISystemUserService userService,ProductMapper productMapper){
         this.productDAO = productDAO;
         this.userService = userService;
+        this.productMapper = productMapper;
     }
 
     public ProductDTO getProduct(Long id){
-        Product product = productDAO.findById(id)
-                .orElseThrow(() -> new NotFoundProductException(404,"Product doesn't exists with this Id."));
-
-        ProductDTO productDTO = ProductMapper.INSTANCE.productToProductDTO(product);
+        Product product = existsProductById(id);
+        ProductDTO productDTO = productMapper.productToProductDTO(product);
         return productDTO;
     }
 
     public ProductDTO saveProduct(ProductDTO product){
-        Product p = ProductMapper.INSTANCE.productDTOToProduct(product);
+        Product p = productMapper.productDTOToProduct(product);
         SystemUser systemUser = userService.getUserByContext();
         p.setIdUserCreated(systemUser);
         productDAO.save(p);
@@ -45,7 +45,7 @@ public class IProductServiceImp implements IProductService {
     }
 
     public ProductDTO updateProduct(Long id, ProductDTO product){
-        Product p =  productDAO.findById(id).orElseThrow(() -> new NotFoundProductException(400,"Product's ID doesn't exists."));
+        Product p = existsProductById(id);
         p.setItemCode(product.getItemCode());
         p.setBarCode(product.getBarCode());
         p.setName(product.getName());
@@ -55,15 +55,14 @@ public class IProductServiceImp implements IProductService {
         p.setRetailPrice(product.getRetailPrice());
         p.setHasDiscount(product.isHasDiscount());
         p.setPiecesBox(product.getPiecesBox());
-        productDAO.save(p);
-        ProductDTO productDTO = ProductMapper.INSTANCE.productToProductDTO(p);
+        p = productDAO.save(p);
+        ProductDTO productDTO = productMapper.productToProductDTO(p);
         return productDTO;
     }
 
     public void deleteProduct(Long id){
-        Product p = productDAO.findById(id).orElseThrow(() -> new NotFoundProductException(400,"Product's ID doesn't exists."));
+        Product p = existsProductById(id);
         SystemUser systemUser = userService.getUserByContext();
-
         p.setIdUserDeleted(systemUser);
         p.setDeletedAt(new Date());
         p.setDeleted(true);
@@ -76,7 +75,11 @@ public class IProductServiceImp implements IProductService {
                         productDAO.findAll().iterator(),
                         Spliterator.ORDERED)
                 , false)
-                .map((p) -> ProductMapper.INSTANCE.productToProductDTO(p))
+                .map((p) -> productMapper.productToProductDTO(p))
                 .collect(Collectors.toList());
+    }
+
+    public Product existsProductById(Long id){
+        return productDAO.findById(id).orElseThrow(() -> new NotFoundProductException(400,"Product's ID doesn't exists."));
     }
 }

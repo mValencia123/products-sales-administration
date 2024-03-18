@@ -2,11 +2,10 @@ package easysalesassistant.api.services;
 
 import easysalesassistant.api.context.UserContext;
 import easysalesassistant.api.dao.IUserDAO;
-import easysalesassistant.api.dto.SystemUserDTO;
+import easysalesassistant.api.dto.systemuser.SystemUserDTO;
 import easysalesassistant.api.entity.Role;
 import easysalesassistant.api.entity.SystemUser;
 import easysalesassistant.api.exceptions.NotFoundSystemUserException;
-import easysalesassistant.api.exceptions.NotFoundTenantException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,12 +26,9 @@ public class ISystemUserServiceImp implements UserDetailsService, ISystemUserSer
     IUserDAO userDAO;
     BCryptPasswordEncoder passwordEncoder;
 
-    ISystemUserService userService;
-
-    ISystemUserServiceImp(IUserDAO userDao, BCryptPasswordEncoder passwordEncoder,ISystemUserService userService){
+    ISystemUserServiceImp(IUserDAO userDao, BCryptPasswordEncoder passwordEncoder){
         this.userDAO = userDao;
         this.passwordEncoder = passwordEncoder;
-        this.userService = userService;
     }
 
     private Logger logger = LoggerFactory.getLogger(ISystemUserServiceImp.class);
@@ -58,7 +54,7 @@ public class ISystemUserServiceImp implements UserDetailsService, ISystemUserSer
 
     @Override
     public SystemUserDTO saveUser(SystemUserDTO systemUserDTO) {
-        SystemUser systemUserCreated = userService.getUserByContext();
+        SystemUser systemUserCreated = getUserByContext();
         String encodedPassword = passwordEncoder.encode(systemUserDTO.getPassword());
 
         SystemUser systemUser = new SystemUser();

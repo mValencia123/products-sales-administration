@@ -1,7 +1,7 @@
 package easysalesassistant.api.services;
 
 import easysalesassistant.api.dao.*;
-import easysalesassistant.api.dto.SellDTO;
+import easysalesassistant.api.dto.sell.SellDTO;
 import easysalesassistant.api.entity.*;
 import easysalesassistant.api.exceptions.NotFoundBranchException;
 import easysalesassistant.api.exceptions.NotFoundProductException;

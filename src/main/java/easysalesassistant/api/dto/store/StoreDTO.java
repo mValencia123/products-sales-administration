@@ -1,15 +1,17 @@
-package easysalesassistant.api.dto.provider;
+package easysalesassistant.api.dto.store;
 
 import easysalesassistant.api.dto.address.AddressDTO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
-public class ProviderDTO {
+public class StoreDTO {
     private Long id;
-    private String firstName;
-    private String lastName;
-    private String rfc;
+    private String description;
+    private Date createdAt;
+    private Long phoneNumber;
     private AddressDTO address;
 }

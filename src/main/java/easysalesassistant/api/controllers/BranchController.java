@@ -1,10 +1,8 @@
 package easysalesassistant.api.controllers;
 
-import easysalesassistant.api.dto.BranchDTO;
-import easysalesassistant.api.dto.BranchGetDTO;
-import easysalesassistant.api.entity.Branch;
+import easysalesassistant.api.dto.branch.BranchDTO;
+import easysalesassistant.api.dto.branch.BranchGetDTO;
 import easysalesassistant.api.services.IBranchService;
-import easysalesassistant.api.services.IBranchServiceImp;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +17,8 @@ public class BranchController {
     }
 
     @PostMapping(value = {"/",""})
-    public void saveBranch(@RequestBody BranchDTO branch){
-        branchService.saveBranch(branch);
+    public BranchDTO saveBranch(@RequestBody BranchDTO branch){
+        return branchService.saveBranch(branch);
     }
 
     @GetMapping(value = {"/{idBranch}"})
@@ -31,5 +29,10 @@ public class BranchController {
     @PostMapping(value = {"/{idBranch}"})
     public BranchGetDTO updateBranch(@RequestBody BranchDTO branch,@PathVariable("idBranch") Long idBranch){
         return branchService.updateBranch(idBranch,branch);
+    }
+
+    @DeleteMapping(value = {"/{idBranch}"})
+    public void deleteBranch(@PathVariable("idBranch") Long idBranch){
+        branchService.deleteBranch(idBranch);
     }
 }

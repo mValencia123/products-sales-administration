@@ -16,7 +16,7 @@ public class ProviderController {
 
     @GetMapping (value = {"/{id}"})
     public ProviderDTO getProvider(@PathVariable(value = "id") Long id){
-        return providerService.getProviderById(id);
+        return providerService.getProviderDTOById(id);
     }
 
     @PostMapping(value = {"","/"})

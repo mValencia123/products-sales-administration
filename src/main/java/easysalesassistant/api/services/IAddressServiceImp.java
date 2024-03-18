@@ -35,9 +35,9 @@ public class IAddressServiceImp implements IAddressService{
         address.setStreet(addressDTO.getStreet());
         address.setNumber(addressDTO.getNumber());
         address.setSuburb(addressDTO.getSuburb());
-        address.setPostalCode(address.getPostalCode());
+        address.setPostalCode(addressDTO.getPostalCode());
 
-        return address;
+        return addressDAO.save(address);
     }
 
     @Override

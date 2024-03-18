@@ -24,15 +24,27 @@ public class Branch implements Serializable {
 
     private Date createdAt;
 
+    private Date deletedAt;
+
     private Long phoneNumber;
 
     private boolean allowSellNegativeStock;
+
+    private boolean deleted = false;
+
+    @ManyToOne
+    @JoinColumn(name="id_user_created")
+    private SystemUser idUserCreated;
+
+    @ManyToOne
+    @JoinColumn(name="id_user_deleted")
+    private SystemUser idUserDeleted;
 
     @ManyToOne
     @JoinColumn(name="id_store")
     private Store idStore;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="id_address")
     private Address idAddress;
 }

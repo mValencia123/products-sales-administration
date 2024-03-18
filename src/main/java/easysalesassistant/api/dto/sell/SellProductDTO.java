@@ -1,4 +1,4 @@
-package easysalesassistant.api.dto;
+package easysalesassistant.api.dto.sell;
 
 import lombok.Data;
 

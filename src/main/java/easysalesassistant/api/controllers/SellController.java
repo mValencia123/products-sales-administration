@@ -1,10 +1,7 @@
 package easysalesassistant.api.controllers;
 
-import easysalesassistant.api.dto.SellDTO;
-import easysalesassistant.api.entity.Sell;
+import easysalesassistant.api.dto.sell.SellDTO;
 import easysalesassistant.api.services.ISellService;
-import easysalesassistant.api.services.ISellServiceImp;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
