@@ -6,7 +6,9 @@ import easysalesassistant.api.dto.address.AddressDTO;
 import easysalesassistant.api.entity.Address;
 import easysalesassistant.api.entity.Branch;
 import org.mapstruct.Named;
+import org.springframework.stereotype.Component;
 
+@Component
 public class BranchQualifier {
     IBranchDAO branchDAO;
 

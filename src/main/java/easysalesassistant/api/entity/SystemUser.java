@@ -1,6 +1,7 @@
 package easysalesassistant.api.entity;
 
 import easysalesassistant.api.enums.Gender;
+import easysalesassistant.api.enums.TypeUser;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -60,6 +61,9 @@ public class SystemUser implements Serializable {
     private Gender gender;
 
     private Date birthday;
+
+    @Enumerated(EnumType.STRING)
+    private TypeUser typeUser;
 
     @ManyToOne
     @JoinColumn(name="id_branch")

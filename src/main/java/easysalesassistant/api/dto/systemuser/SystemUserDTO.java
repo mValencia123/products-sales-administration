@@ -2,6 +2,7 @@ package easysalesassistant.api.dto.systemuser;
 
 import easysalesassistant.api.dto.address.AddressDTO;
 import easysalesassistant.api.enums.Gender;
+import easysalesassistant.api.enums.TypeUser;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -22,4 +23,5 @@ public class SystemUserDTO {
     private Gender gender;
     private Long phoneNumber;
     private Long idBranch;
+    private TypeUser typeUser;
 }

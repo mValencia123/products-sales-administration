@@ -4,15 +4,21 @@ import easysalesassistant.api.context.UserContext;
 import easysalesassistant.api.dao.IBranchDAO;
 import easysalesassistant.api.dao.IUserDAO;
 import easysalesassistant.api.dto.systemuser.SystemUserDTO;
+import easysalesassistant.api.dto.systemuser.UserDTO;
 import easysalesassistant.api.entity.Address;
 import easysalesassistant.api.entity.Branch;
 import easysalesassistant.api.entity.Role;
 import easysalesassistant.api.entity.SystemUser;
+import easysalesassistant.api.enums.TypeUser;
 import easysalesassistant.api.exceptions.NotFoundBranchException;
 import easysalesassistant.api.exceptions.NotFoundSystemUserException;
+import easysalesassistant.api.exceptions.UserDisabledException;
+import easysalesassistant.api.exceptions.UserNameAlreadyExistsException;
 import easysalesassistant.api.mappers.SystemUserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -26,21 +32,22 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ISystemUserServiceImp implements UserDetailsService, ISystemUserService {
     IUserDAO userDAO;
     BCryptPasswordEncoder passwordEncoder;
     IAddressService addressService;
-    IBranchDAO branchDAO;
+    IBranchService branchService;
     SystemUserMapper systemUserMapper;
 
-    ISystemUserServiceImp(IUserDAO userDao, BCryptPasswordEncoder passwordEncoder, IAddressService addressService, IBranchDAO branchDAO, SystemUserMapper systemUserMapper){
+    ISystemUserServiceImp(IUserDAO userDao, BCryptPasswordEncoder passwordEncoder, IAddressService addressService, SystemUserMapper systemUserMapper,@Lazy IBranchService branchService){
         this.userDAO = userDao;
         this.passwordEncoder = passwordEncoder;
         this.addressService = addressService;
-        this.branchDAO = branchDAO;
         this.systemUserMapper = systemUserMapper;
+        this.branchService = branchService;
     }
 
     private Logger logger = LoggerFactory.getLogger(ISystemUserServiceImp.class);
@@ -66,10 +73,19 @@ public class ISystemUserServiceImp implements UserDetailsService, ISystemUserSer
 
     @Override
     public SystemUserDTO saveUser(SystemUserDTO systemUserDTO) {
+        SystemUser userExists = userDAO.findByUserName(systemUserDTO.getUserName());
+        if(userExists != null){
+            throw new UserNameAlreadyExistsException(403,"User name is not available.");
+        }
+
         SystemUser systemUserCreated = getUserByContext();
-        String encodedPassword = passwordEncoder.encode(systemUserDTO.getPassword());
+        Branch branch = branchService.existsBranchById(systemUserDTO.getIdBranch());
+        if(branch.isDeleted()){
+            throw new NotFoundBranchException(404,"Branch's ID doesnt exists, verify this branch is not deleted.");
+        }
         Address address = addressService.createAddress(systemUserDTO.getAddress());
 
+        String encodedPassword = passwordEncoder.encode(systemUserDTO.getPassword());
         SystemUser systemUser = new SystemUser();
         systemUser.setFirstName(systemUserDTO.getName());
         systemUser.setLastName(systemUserDTO.getLastName());
@@ -78,8 +94,11 @@ public class ISystemUserServiceImp implements UserDetailsService, ISystemUserSer
         systemUser.setRfc(systemUserDTO.getRfc());
         systemUser.setPassword(encodedPassword);
         systemUser.setUserName(systemUserDTO.getUserName());
+        systemUser.setTypeUser(systemUserDTO.getTypeUser());
+        systemUser.setGender(systemUserDTO.getGender());
         systemUser.setIdUserCreated(systemUserCreated);
         systemUser.setIdAddress(address);
+        systemUser.setIdBranch(branch);
         userDAO.save(systemUser);
 
         systemUserDTO.setPassword("");
@@ -95,9 +114,9 @@ public class ISystemUserServiceImp implements UserDetailsService, ISystemUserSer
 
     @Override
     public SystemUserDTO patchUser(Long idUser, SystemUserDTO systemUserDTO) {
-        SystemUser systemUser = userDAO.findById(idUser).orElseThrow(() -> new NotFoundSystemUserException(404,"User's Id doesn't exists."));
+        SystemUser systemUser = existsSystemUser(idUser);
         Address address = addressService.updateAddress(systemUser.getIdAddress().getId(),systemUserDTO.getAddress());
-        Branch branch = branchDAO.findById(systemUserDTO.getIdBranch()).orElseThrow(() -> new NotFoundBranchException(404,"Branch's Id doesn't exists."));
+        Branch branch = branchService.existsBranchById(systemUserDTO.getIdBranch());
 
         systemUser.setFirstName(systemUserDTO.getName());
         systemUser.setLastName(systemUserDTO.getLastName());
@@ -117,6 +136,7 @@ public class ISystemUserServiceImp implements UserDetailsService, ISystemUserSer
     @Override
     public SystemUserDTO getUser(Long idUser) {
         SystemUser systemUser = existsSystemUser(idUser);
+        if(!systemUser.isEnabled()) throw new UserDisabledException(403,"User is disabled.");
         return systemUserMapper.systemUserToSystemUserDTO(systemUser);
     }
 
@@ -136,6 +156,19 @@ public class ISystemUserServiceImp implements UserDetailsService, ISystemUserSer
     public SystemUser existsSystemUser(Long idUser) {
         SystemUser systemUser = userDAO.findById(idUser).orElseThrow(() -> new NotFoundSystemUserException(404,"User's Id doesn't exists."));
         return systemUser;
+    }
+
+    @Override
+    public List<UserDTO> getAllUserByType(TypeUser typeUser) {
+        return userDAO.findByTypeUserAndEnabledTrue(typeUser)
+                .stream()
+                .map((u) -> UserDTO.builder()
+                        .idUser(u.getId())
+                        .name(u.getLastName() + " " + u.getFirstName())
+                        .email(u.getEmail())
+                        .userName(u.getUserName())
+                        .build())
+                .collect(Collectors.toList());
     }
 
 }

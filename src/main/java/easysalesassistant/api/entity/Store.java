@@ -27,6 +27,18 @@ public class Store implements Serializable {
 
     private Long phoneNumber;
 
+    private boolean deleted = false;
+
+    private Date deletedAt;
+
+    @ManyToOne
+    @JoinColumn(name="id_user_created")
+    private SystemUser idUserCreated;
+
+    @ManyToOne
+    @JoinColumn(name="id_user_deleted")
+    private SystemUser idUserDeleted;
+
     @OneToOne
     @JoinColumn(name="id_address")
     private Address idAddress;

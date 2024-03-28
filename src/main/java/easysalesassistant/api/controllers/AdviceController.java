@@ -42,6 +42,18 @@ public class AdviceController extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(value = UserNameAlreadyExistsException.class)
+    public ResponseEntity<ErrorExceptionDTO> userNameAlreadyExistsExceptionHandler(UserNameAlreadyExistsException ex){
+        ErrorExceptionDTO error = ErrorExceptionDTO.builder().message(ex.getMessage()).code(ex.getCode()).build();
+        return new ResponseEntity<>(error,HttpStatus.ALREADY_REPORTED);
+    }
+
+    @ExceptionHandler(value = UserDisabledException.class)
+    public ResponseEntity<ErrorExceptionDTO> UserDisabledExceptionHandler(UserDisabledException ex){
+        ErrorExceptionDTO error = ErrorExceptionDTO.builder().message(ex.getMessage()).code(ex.getCode()).build();
+        return new ResponseEntity<>(error,HttpStatus.FORBIDDEN);
+    }
+
     @ExceptionHandler(value = RuntimeException.class)
     public ResponseEntity<ErrorExceptionDTO> runtimeExceptionHandler(RuntimeException ex){
         ErrorExceptionDTO error = ErrorExceptionDTO.builder().message(ex.getMessage()).code(500).build();

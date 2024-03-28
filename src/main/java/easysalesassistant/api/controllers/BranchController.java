@@ -26,7 +26,7 @@ public class BranchController {
         return branchService.getBranchById(idBranch);
     }
 
-    @PostMapping(value = {"/{idBranch}"})
+    @PatchMapping(value = {"/{idBranch}"})
     public BranchGetDTO updateBranch(@RequestBody BranchDTO branch,@PathVariable("idBranch") Long idBranch){
         return branchService.updateBranch(idBranch,branch);
     }
