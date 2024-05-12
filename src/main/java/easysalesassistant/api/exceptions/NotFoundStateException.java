@@ -1,5 +1,8 @@
 package easysalesassistant.api.exceptions;
 
+import lombok.Data;
+
+@Data
 public class NotFoundStateException extends RuntimeException{
     private int code;
     private String message;

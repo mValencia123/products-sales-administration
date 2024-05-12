@@ -1,5 +1,8 @@
 package easysalesassistant.api.exceptions;
 
+import lombok.Data;
+
+@Data
 public class NotFoundCityException extends RuntimeException {
     private  int code;
     private String message;

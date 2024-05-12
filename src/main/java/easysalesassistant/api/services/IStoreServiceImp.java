@@ -7,9 +7,12 @@ import easysalesassistant.api.entity.Store;
 import easysalesassistant.api.entity.SystemUser;
 import easysalesassistant.api.exceptions.NotFoundStoreException;
 import easysalesassistant.api.mappers.StoreMapper;
+import easysalesassistant.api.utils.StreamOperation;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class IStoreServiceImp implements IStoreService {
@@ -79,5 +82,14 @@ public class IStoreServiceImp implements IStoreService {
         store.setIdUserDeleted(userDeleted);
 
         storeDAO.save(store);
+    }
+
+    @Override
+    public List<StoreDTO> getStores() {
+        return StreamOperation
+                .getStreamFromIterable(storeDAO.findAll())
+                .filter((s) -> !s.isDeleted())
+                .map(storeMapper::storeToStoreDTO)
+                .collect(Collectors.toList());
     }
 }

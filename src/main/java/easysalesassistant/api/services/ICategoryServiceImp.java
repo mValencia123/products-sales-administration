@@ -9,6 +9,8 @@ import easysalesassistant.api.mappers.CategoryMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ICategoryServiceImp implements ICategoryService{
@@ -26,6 +28,8 @@ public class ICategoryServiceImp implements ICategoryService{
 
         Category category = new Category();
         category.setDescription(categoryDTO.getDescription());
+        category.setCreatedAt(new Date());
+        category.setDeleted(false);
         category.setIdUserCreated(systemUser);
         categoryDAO.save(category);
 
@@ -56,6 +60,20 @@ public class ICategoryServiceImp implements ICategoryService{
         category.setIdUserDeleted(systemUser);
 
         categoryDAO.save(category);
+    }
+
+    @Override
+    public List<CategoryDTO> getCategories() {
+        return categoryDAO.findByDeletedFalse()
+                .stream()
+                .filter((b) -> !b.isDeleted())
+                .map((c) ->
+                    CategoryDTO.builder()
+                        .description(c.getDescription())
+                        .id(c.getId())
+                        .createdAt(c.getCreatedAt())
+                    .build())
+                .collect(Collectors.toList());
     }
 
     public Category existsCategoryById(Long id){

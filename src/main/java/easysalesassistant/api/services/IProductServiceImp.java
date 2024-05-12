@@ -5,10 +5,12 @@ import easysalesassistant.api.dao.IProductDAO;
 import easysalesassistant.api.dao.IUserDAO;
 import easysalesassistant.api.dto.product.ProductDTO;
 import easysalesassistant.api.entity.Product;
+import easysalesassistant.api.entity.Store;
 import easysalesassistant.api.entity.SystemUser;
 import easysalesassistant.api.exceptions.NotFoundProductException;
 import easysalesassistant.api.exceptions.NotFoundSystemUserException;
 import easysalesassistant.api.mappers.ProductMapper;
+import easysalesassistant.api.utils.StreamOperation;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -23,11 +25,13 @@ public class IProductServiceImp implements IProductService {
     IProductDAO productDAO;
     ISystemUserService userService;
     ProductMapper productMapper;
+    IStockService stockService;
 
-    IProductServiceImp(IProductDAO productDAO, ISystemUserService userService,ProductMapper productMapper){
+    IProductServiceImp(IProductDAO productDAO, ISystemUserService userService,ProductMapper productMapper, IStockService stockService){
         this.productDAO = productDAO;
         this.userService = userService;
         this.productMapper = productMapper;
+        this.stockService = stockService;
     }
 
     public ProductDTO getProduct(Long id){
@@ -70,13 +74,17 @@ public class IProductServiceImp implements IProductService {
     }
 
     public List<ProductDTO> getProducts() {
-        return StreamSupport.stream(
-                Spliterators.spliteratorUnknownSize(
-                        productDAO.findAll().iterator(),
-                        Spliterator.ORDERED)
-                , false)
-                .map((p) -> productMapper.productToProductDTO(p))
+        return StreamOperation
+                .getStreamFromIterable(productDAO.findAll())
+                .filter((p) -> !p.isDeleted())
+                .map(productMapper::productToProductDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean productHasStock(Long id, Store idStore, int amount) {
+        Product product = existsProductById(id);
+        return stockService.productHasStockAt(product,idStore,amount);
     }
 
     public Product existsProductById(Long id){

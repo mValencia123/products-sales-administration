@@ -19,6 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -42,12 +44,15 @@ public class ISystemUserServiceImp implements UserDetailsService, ISystemUserSer
     IBranchService branchService;
     SystemUserMapper systemUserMapper;
 
+    //KafkaTemplate<String,Object> kafkaTemplate;
+
     ISystemUserServiceImp(IUserDAO userDao, BCryptPasswordEncoder passwordEncoder, IAddressService addressService, SystemUserMapper systemUserMapper,@Lazy IBranchService branchService){
         this.userDAO = userDao;
         this.passwordEncoder = passwordEncoder;
         this.addressService = addressService;
         this.systemUserMapper = systemUserMapper;
         this.branchService = branchService;
+        //this.kafkaTemplate = kafkaTemplate;
     }
 
     private Logger logger = LoggerFactory.getLogger(ISystemUserServiceImp.class);
@@ -58,10 +63,9 @@ public class ISystemUserServiceImp implements UserDetailsService, ISystemUserSer
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         SystemUser user = userDAO.findByUserName(username);
         if (user == null){
-            logger.error("Usurio nullo");
             throw new UsernameNotFoundException("Usuario no encontrado");
         }
-
+        //kafkaTemplate.send("test-topic",user);
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 
         for(Role role : user.getAuthorities()){
@@ -100,7 +104,6 @@ public class ISystemUserServiceImp implements UserDetailsService, ISystemUserSer
         systemUser.setIdAddress(address);
         systemUser.setIdBranch(branch);
         userDAO.save(systemUser);
-
         systemUserDTO.setPassword("");
         return systemUserDTO;
     }
@@ -170,5 +173,10 @@ public class ISystemUserServiceImp implements UserDetailsService, ISystemUserSer
                         .build())
                 .collect(Collectors.toList());
     }
+
+    /*@KafkaListener(topics = "test-topic",groupId = "default")
+    public void listerUser(SystemUser user){
+        System.out.println("New Message: "+user.getFirstName());
+    }*/
 
 }

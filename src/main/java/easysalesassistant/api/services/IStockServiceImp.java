@@ -16,7 +16,7 @@ public class IStockServiceImp implements IStockService {
     }
 
     @Override
-    public void productHasStockAt(Product idProduct, Store idStore, int amount) {
+    public boolean productHasStockAt(Product idProduct, Store idStore, int amount) {
         Stock stock = stockDAO.findByIdProductAndIdStore(idProduct,idStore);
         if(stock == null){
             throw new NotEnoughStock(403,"Product: ".concat(idProduct.toString()).concat(" doesn't exists in this branch."));
@@ -24,6 +24,7 @@ public class IStockServiceImp implements IStockService {
         if(stock.getAmount() < amount){
             throw new NotEnoughStock(403,"Product: ".concat(idProduct.toString()).concat(" doesn't have enough stock in this branch."));
         }
+        return true;
     }
 
     @Override

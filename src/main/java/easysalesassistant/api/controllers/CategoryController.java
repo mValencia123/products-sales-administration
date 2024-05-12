@@ -4,6 +4,8 @@ import easysalesassistant.api.dto.category.CategoryDTO;
 import easysalesassistant.api.services.ICategoryService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/category")
 public class CategoryController {
@@ -31,6 +33,11 @@ public class CategoryController {
     @DeleteMapping(value = "/{idCategory}")
     public void deleteCategory(@PathVariable(value = "idCategory") Long idCategory){
         categoryService.deleteById(idCategory);
+    }
+
+    @GetMapping(value = "/categories")
+    public List<CategoryDTO> getAllCategories(){
+        return categoryService.getCategories();
     }
 }
 

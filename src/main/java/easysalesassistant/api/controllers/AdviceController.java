@@ -49,21 +49,53 @@ public class AdviceController extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value = UserDisabledException.class)
-    public ResponseEntity<ErrorExceptionDTO> UserDisabledExceptionHandler(UserDisabledException ex){
+    public ResponseEntity<ErrorExceptionDTO> userDisabledExceptionHandler(UserDisabledException ex){
         ErrorExceptionDTO error = ErrorExceptionDTO.builder().message(ex.getMessage()).code(ex.getCode()).build();
         return new ResponseEntity<>(error,HttpStatus.FORBIDDEN);
     }
+
+    @ExceptionHandler(value = NotFoundAddressException.class)
+    public ResponseEntity<ErrorExceptionDTO> notFoundAddressExceptionHandler(NotFoundAddressException ex){
+        ErrorExceptionDTO error = ErrorExceptionDTO.builder().message(ex.getMessage()).code(ex.getCode()).build();
+        return new ResponseEntity<>(error,HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(value = NotFoundBranchException.class)
+    public ResponseEntity<ErrorExceptionDTO> notFoundBranchExceptionHandler(NotFoundBranchException ex){
+        ErrorExceptionDTO error = ErrorExceptionDTO.builder().message(ex.getMessage()).code(ex.getCode()).build();
+        return new ResponseEntity<>(error,HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(value = NotFoundCategoryException.class)
+    public ResponseEntity<ErrorExceptionDTO> notFoundCategoryExceptionHandler(NotFoundCategoryException ex){
+        ErrorExceptionDTO error = ErrorExceptionDTO.builder().message(ex.getMessage()).code(ex.getCode()).build();
+        return new ResponseEntity<>(error,HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(value = NotFoundCityException.class)
+    public ResponseEntity<ErrorExceptionDTO> notFoundCityExceptionHandler(NotFoundCityException ex){
+        ErrorExceptionDTO error = ErrorExceptionDTO.builder().message(ex.getMessage()).code(ex.getCode()).build();
+        return new ResponseEntity<>(error,HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(value = NotFoundStateException.class)
+    public ResponseEntity<ErrorExceptionDTO> notFoundCityExceptionHandler(NotFoundStateException ex){
+        ErrorExceptionDTO error = ErrorExceptionDTO.builder().message(ex.getMessage()).code(ex.getCode()).build();
+        return new ResponseEntity<>(error,HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(value = NotFoundSystemUserException.class)
+    public ResponseEntity<ErrorExceptionDTO> notFoundCityExceptionHandler(NotFoundSystemUserException ex){
+        ErrorExceptionDTO error = ErrorExceptionDTO.builder().message(ex.getMessage()).code(ex.getCode()).build();
+        return new ResponseEntity<>(error,HttpStatus.FORBIDDEN);
+    }
+
+
 
     @ExceptionHandler(value = RuntimeException.class)
     public ResponseEntity<ErrorExceptionDTO> runtimeExceptionHandler(RuntimeException ex){
         ErrorExceptionDTO error = ErrorExceptionDTO.builder().message(ex.getMessage()).code(500).build();
         return new ResponseEntity<>(error,HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @ExceptionHandler(value = NotFoundTenantException.class)
-    public ResponseEntity<ErrorExceptionDTO> requestExceptionHandler(NotFoundTenantException ex){
-        ErrorExceptionDTO error = ErrorExceptionDTO.builder().message(ex.getMessage()).code(ex.getCode()).build();
-        return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
     }
 
     @Override

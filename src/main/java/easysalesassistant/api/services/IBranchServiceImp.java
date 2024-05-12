@@ -11,10 +11,13 @@ import easysalesassistant.api.entity.SystemUser;
 import easysalesassistant.api.exceptions.NotFoundBranchException;
 import easysalesassistant.api.exceptions.NotFoundStoreException;
 import easysalesassistant.api.mappers.StoreMapper;
+import easysalesassistant.api.utils.StreamOperation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class IBranchServiceImp implements IBranchService{
@@ -99,5 +102,17 @@ public class IBranchServiceImp implements IBranchService{
 
     public Branch existsBranchById(Long id){
         return branchDAO.findById(id).orElseThrow(() -> new NotFoundBranchException(404,"Branch's ID doesn't exists."));
+    }
+
+    @Override
+    public List<BranchDTO> getBranches() {
+        return StreamOperation
+                .getStreamFromIterable(branchDAO.findAll())
+                .filter((b) -> !b.isDeleted())
+                .map((b) -> BranchDTO.builder()
+                        .id(b.getId())
+                        .description(b.getDescription())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

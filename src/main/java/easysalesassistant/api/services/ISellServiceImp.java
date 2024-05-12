@@ -15,7 +15,6 @@ public class ISellServiceImp implements ISellService{
     IStoreDAO storeDAO;
     IStockService stockService;
     IBranchDAO branchDAO;
-
     IProductDAO productDAO;
 
     ISellServiceImp(ISellDAO sellDAO,IStoreDAO storeDAO,IBranchDAO branchDAO,IStockService stockService, IProductDAO productDAO){
