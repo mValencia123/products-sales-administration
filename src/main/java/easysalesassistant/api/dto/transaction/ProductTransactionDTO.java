@@ -1,18 +1,18 @@
 package easysalesassistant.api.dto.transaction;
 
-import easysalesassistant.api.enums.Type;
+import easysalesassistant.api.enums.OutputType;
 import lombok.Data;
 
 @Data
 public class ProductTransactionDTO {
     Long idProduct;
     int amount;
-    Type output;
+    OutputType output;
     int piecesBox;
 
     public int getTotalAmount(){
         int pieces = this.getAmount();
-        if(output == Type.BOX) pieces = piecesBox * pieces;
+        if(output == OutputType.BOX) pieces = piecesBox * pieces;
         return pieces;
     }
 }

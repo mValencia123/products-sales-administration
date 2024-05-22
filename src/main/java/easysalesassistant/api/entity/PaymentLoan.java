@@ -7,32 +7,30 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Date;
 
+@Table(name = "payments_loan")
 @Entity
-@Table(name = "stocks")
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class Stock implements Serializable {
-
+@NoArgsConstructor
+public class PaymentLoan implements Serializable {
     private static final Long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long amount;
+    private double payment;
+
+    private Date paymentAt;
 
     @ManyToOne
-    @JoinColumn( name = "id_product")
-    private Product idProduct;
+    @JoinColumn(name = "id_user_authorized")
+    private SystemUser idUserAuthorized;
 
     @ManyToOne
-    @JoinColumn( name = "id_store")
-    private Store idStore;
-
-    @ManyToOne
-    @JoinColumn(name = "id_user_created")
-    private SystemUser idUserCreated;
+    @JoinColumn(name = "id_loan")
+    private Loan idLoan;
 }

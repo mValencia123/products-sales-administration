@@ -2,7 +2,10 @@ package easysalesassistant.api.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -12,6 +15,9 @@ import java.util.List;
 @Entity
 @Table(name = "products")
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Product implements Serializable {
 
     private static final long serialVersionUID = 1L;

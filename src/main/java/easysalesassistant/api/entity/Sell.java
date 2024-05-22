@@ -2,9 +2,7 @@ package easysalesassistant.api.entity;
 
 import easysalesassistant.api.enums.SellType;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,6 +12,9 @@ import java.util.Set;
 @Entity
 @Table( name = "sells")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Sell implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -24,17 +25,16 @@ public class Sell implements Serializable {
 
     private Date soldAt;
 
+    @Enumerated(EnumType.STRING)
     private SellType sellType;
 
     private boolean isWholsale;
 
-    private Long invoice;
-
     private int discountPercent;
 
-    private Long discount;
+    private double discount;
 
-    private Long total;
+    private double total;
 
     private Date deletedAt;
 
@@ -43,8 +43,8 @@ public class Sell implements Serializable {
     private SystemUser idUserSold;
 
     @ManyToOne
-    @JoinColumn(name = "id_user_buy")
-    private SystemUser idUserBuy;
+    @JoinColumn(name = "id_customer")
+    private SystemUser idCustomer;
 
     @ManyToOne
     @JoinColumn(name = "id_user_deleted")

@@ -1,7 +1,7 @@
 package easysalesassistant.api.entity;
 
 
-import easysalesassistant.api.enums.Type;
+import easysalesassistant.api.enums.OutputType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,13 +24,14 @@ public class ProductReception implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "id_product")
-    private Product product;
+    private Product idProduct;
 
     @ManyToOne
     @JoinColumn(name = "id_reception")
-    private Reception reception;
+    private Reception idReception;
 
-    private Type output;
+    @Enumerated(EnumType.STRING)
+    private OutputType output;
 
     private int amount;
 

@@ -2,8 +2,7 @@ package easysalesassistant.api.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -11,8 +10,9 @@ import java.util.List;
 
 @Entity
 @Table( name = "stores")
-@Setter
-@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Store implements Serializable {
     private static final Long serialVersionUID = 1L;
 

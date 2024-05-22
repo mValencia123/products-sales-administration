@@ -1,6 +1,6 @@
 package easysalesassistant.api.entity;
 
-import easysalesassistant.api.enums.Type;
+import easysalesassistant.api.enums.OutputType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,7 +29,7 @@ public class ProductTransaction implements Serializable {
     @JoinColumn(name = "id_transaction")
     private Transaction idTransaction;
 
-    private Type output;
+    private OutputType output;
 
     private int amount;
 

@@ -110,7 +110,8 @@ public class ISystemUserServiceImp implements UserDetailsService, ISystemUserSer
 
     @Override
     public SystemUser getUserByContext() {
-        SystemUser systemUser = userDAO.findByUserName(UserContext.getCurrentUser());
+        System.out.println(UserContext.getCurrentUser());
+        SystemUser systemUser = userDAO.findByUserName("max");
         if(systemUser == null) throw new NotFoundSystemUserException(404,"System user doesn't exists.");
         return systemUser;
     }
@@ -172,6 +173,11 @@ public class ISystemUserServiceImp implements UserDetailsService, ISystemUserSer
                         .userName(u.getUserName())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public SystemUser getSystemUserById(Long idUser) {
+        return userDAO.findById(idUser).orElse(null);
     }
 
     /*@KafkaListener(topics = "test-topic",groupId = "default")

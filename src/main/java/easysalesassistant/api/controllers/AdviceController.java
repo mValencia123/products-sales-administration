@@ -18,6 +18,13 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class AdviceController extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(value = NotFoundSellException.class)
+    public ResponseEntity<ErrorExceptionDTO> notFoundSellException(NotFoundSellException ex){
+        ErrorExceptionDTO error = ErrorExceptionDTO.builder().message(ex.getMessage()).code(ex.getCode()).build();
+        return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(value = NotEnoughStock.class)
     public ResponseEntity<ErrorExceptionDTO> notEnoughStockExceptionHandler(NotEnoughStock ex){
         ErrorExceptionDTO error = ErrorExceptionDTO.builder().message(ex.getMessage()).code(ex.getCode()).build();

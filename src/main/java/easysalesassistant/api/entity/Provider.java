@@ -3,8 +3,7 @@ package easysalesassistant.api.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -12,8 +11,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "providers")
-@Setter
-@Getter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Provider implements Serializable {
 
     private static final Long serialVersionUID = 1L;
@@ -28,6 +29,7 @@ public class Provider implements Serializable {
     @Column(length = 50)
     private String lastName;
 
+    @Column(length = 15)
     private String rfc;
 
     private boolean deleted = false;

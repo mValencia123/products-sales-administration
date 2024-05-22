@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "stocks")
+@Table(name = "configurations")
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class Stock implements Serializable {
+@NoArgsConstructor
+public class Configuration implements Serializable {
 
     private static final Long serialVersionUID = 1L;
 
@@ -22,17 +22,9 @@ public class Stock implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long amount;
-
     @ManyToOne
-    @JoinColumn( name = "id_product")
-    private Product idProduct;
+    @JoinColumn(name = "id_store_default")
+    Store idStoreDefault;
 
-    @ManyToOne
-    @JoinColumn( name = "id_store")
-    private Store idStore;
-
-    @ManyToOne
-    @JoinColumn(name = "id_user_created")
-    private SystemUser idUserCreated;
+    String urlImageDefault;
 }

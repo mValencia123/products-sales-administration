@@ -27,7 +27,7 @@ public class IProductServiceImp implements IProductService {
     ProductMapper productMapper;
     IStockService stockService;
 
-    IProductServiceImp(IProductDAO productDAO, ISystemUserService userService,ProductMapper productMapper, IStockService stockService){
+    public IProductServiceImp(IProductDAO productDAO, ISystemUserService userService,ProductMapper productMapper, IStockService stockService){
         this.productDAO = productDAO;
         this.userService = userService;
         this.productMapper = productMapper;

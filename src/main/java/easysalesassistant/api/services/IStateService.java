@@ -9,6 +9,5 @@ import java.util.List;
 public interface IStateService {
     List<StateDTO> getStates();
     List<CityDTO> getCitiesByIdState(Long id);
-
     State existsStateById(Long id);
 }

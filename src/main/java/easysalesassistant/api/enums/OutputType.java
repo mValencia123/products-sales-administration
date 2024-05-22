@@ -1,5 +1,5 @@
 package easysalesassistant.api.enums;
 
-public enum Type {
+public enum OutputType {
     PIECES,BOX;
 }

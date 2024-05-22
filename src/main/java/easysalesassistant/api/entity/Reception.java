@@ -2,7 +2,10 @@ package easysalesassistant.api.entity;
 
 import easysalesassistant.api.enums.StatusReception;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -11,6 +14,9 @@ import java.util.List;
 @Table(name = "receptions")
 @Entity
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Reception implements Serializable{
 
     private static final long serialVersionUID = 1L;
@@ -22,7 +28,8 @@ public class Reception implements Serializable{
     @OneToMany
     List<ProductTransaction> products;
 
-    private String comment;
+    @Column(length = 2048)
+    private String comments;
 
     private Date createdAt;
 
@@ -30,15 +37,16 @@ public class Reception implements Serializable{
     @JoinColumn(name = "id_user_created")
     private SystemUser userCreated;
 
-    private Date autorizedAt;
+    private Date authorizedAt;
 
     @ManyToOne
-    @JoinColumn(name = "id_user_autorized")
-    private SystemUser userAutorized;
+    @JoinColumn(name = "id_user_authorized")
+    private SystemUser userAuthorized;
 
     @ManyToOne
     @JoinColumn(name = "id_store")
     private Store storeReceive;
 
+    @Enumerated(EnumType.STRING)
     private StatusReception status;
 }

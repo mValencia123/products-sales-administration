@@ -57,7 +57,9 @@ public class Transaction implements Serializable {
     @OneToMany
     List<ProductTransaction> products;
 
+    @Column(length = 2048)
     private String comment;
 
+    @Enumerated(EnumType.STRING)
     private StatusTransaction status;
 }
