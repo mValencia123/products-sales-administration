@@ -8,6 +8,7 @@ import easysalesassistant.api.dto.store.StoreDTO;
 import easysalesassistant.api.entity.Branch;
 import easysalesassistant.api.entity.Store;
 import easysalesassistant.api.entity.SystemUser;
+import easysalesassistant.api.exceptions.BranchIsDeletedException;
 import easysalesassistant.api.exceptions.NotFoundBranchException;
 import easysalesassistant.api.exceptions.NotFoundStoreException;
 import easysalesassistant.api.mappers.StoreMapper;
@@ -63,6 +64,7 @@ public class IBranchServiceImp implements IBranchService{
     @Override
     public BranchGetDTO getBranchById(Long idBranch) {
         Branch branch = existsBranchById(idBranch);
+        branchIsDeleted(branch);
         BranchGetDTO branchGetDto = new BranchGetDTO();
         branchGetDto.setIdBranch(branch.getId());
         branchGetDto.setDescription(branch.getDescription());
@@ -74,6 +76,7 @@ public class IBranchServiceImp implements IBranchService{
     @Override
     public BranchGetDTO updateBranch(Long idBranch, BranchDTO branchDTO) {
         Branch branch = existsBranchById(idBranch);
+        branchIsDeleted(branch);
         Store store = storeService.existsStoreById(branchDTO.getIdStore());
 
         branch.setDescription(branchDTO.getDescription());
@@ -91,6 +94,7 @@ public class IBranchServiceImp implements IBranchService{
     @Override
     public void deleteBranch(Long idBranch) {
         Branch branch = existsBranchById(idBranch);
+        branchIsDeleted(branch);
         SystemUser systemUser = userService.getUserByContext();
 
         branch.setDeleted(true);
@@ -114,5 +118,10 @@ public class IBranchServiceImp implements IBranchService{
                         .description(b.getDescription())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void branchIsDeleted(Branch branch) {
+        if(branch.isDeleted()) throw new BranchIsDeletedException(403,"The branch is not longer active.");
     }
 }

@@ -13,6 +13,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class Store implements Serializable {
     private static final Long serialVersionUID = 1L;
 

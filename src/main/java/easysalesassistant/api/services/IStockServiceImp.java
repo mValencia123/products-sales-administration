@@ -6,6 +6,7 @@ import easysalesassistant.api.entity.Stock;
 import easysalesassistant.api.entity.Store;
 import easysalesassistant.api.exceptions.NotEnoughStock;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class IStockServiceImp implements IStockService {
@@ -27,6 +28,7 @@ public class IStockServiceImp implements IStockService {
         return true;
     }
 
+    @Transactional
     @Override
     public void reduceStockOfProductAt(Product idProduct, Store idStore, int amount) {
         try{

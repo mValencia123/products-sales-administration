@@ -16,4 +16,5 @@ public interface ISystemUserService {
     SystemUser existsSystemUser(Long idUser);
     List<UserDTO> getAllUserByType(TypeUser typeUser);
     SystemUser getSystemUserById(Long idUser);
+    void userIsDeleted(SystemUser systemUser);
 }

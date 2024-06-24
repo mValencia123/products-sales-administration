@@ -3,8 +3,11 @@ package easysalesassistant.api.services;
 import easysalesassistant.api.dao.ICategoryDAO;
 import easysalesassistant.api.dto.category.CategoryDTO;
 import easysalesassistant.api.entity.Category;
+import easysalesassistant.api.entity.Provider;
 import easysalesassistant.api.entity.SystemUser;
+import easysalesassistant.api.exceptions.CategoryIsDeletedException;
 import easysalesassistant.api.exceptions.NotFoundCategoryException;
+import easysalesassistant.api.exceptions.ProviderIsDeletedException;
 import easysalesassistant.api.mappers.CategoryMapper;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +42,7 @@ public class ICategoryServiceImp implements ICategoryService{
     @Override
     public CategoryDTO updateCategory(Long idCategory,CategoryDTO categoryDTO) {
         Category category = existsCategoryById(idCategory);
+        this.categoryIsDeleted(category);
         category.setDescription(categoryDTO.getDescription());
         categoryDAO.save(category);
         return categoryDTO;
@@ -47,12 +51,14 @@ public class ICategoryServiceImp implements ICategoryService{
     @Override
     public CategoryDTO getCategoryById(Long id) {
         Category category = existsCategoryById(id);
+        this.categoryIsDeleted(category);
         return CategoryMapper.INSTANCE.categoryToCategoryDTO(category);
     }
 
     @Override
     public void deleteById(Long idCategory) {
         Category category = existsCategoryById(idCategory);
+        this.categoryIsDeleted(category);
         SystemUser systemUser = systemUserService.getUserByContext();
 
         category.setDeleted(true);
@@ -74,6 +80,11 @@ public class ICategoryServiceImp implements ICategoryService{
                         .createdAt(c.getCreatedAt())
                     .build())
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void categoryIsDeleted(Category category) {
+        if(category.isDeleted()) throw new CategoryIsDeletedException(403,"The category is not longer active.");
     }
 
     public Category existsCategoryById(Long id){

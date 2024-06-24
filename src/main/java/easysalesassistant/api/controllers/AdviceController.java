@@ -19,6 +19,36 @@ import java.util.Map;
 @RestControllerAdvice
 public class AdviceController extends ResponseEntityExceptionHandler {
 
+    @ExceptionHandler(value = CategoryIsDeletedException.class)
+    public ResponseEntity<ErrorExceptionDTO> categoryIsDeletedException(CategoryIsDeletedException ex){
+        ErrorExceptionDTO error = ErrorExceptionDTO.builder().message(ex.getMessage()).code(ex.getCode()).build();
+        return new ResponseEntity<>(error,HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @ExceptionHandler(value = ProviderIsDeletedException.class)
+    public ResponseEntity<ErrorExceptionDTO> providerIsDeletedException(ProviderIsDeletedException ex){
+        ErrorExceptionDTO error = ErrorExceptionDTO.builder().message(ex.getMessage()).code(ex.getCode()).build();
+        return new ResponseEntity<>(error,HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @ExceptionHandler(value = StoreIsDeletedException.class)
+    public ResponseEntity<ErrorExceptionDTO> storeIsDeletedException(StoreIsDeletedException ex){
+        ErrorExceptionDTO error = ErrorExceptionDTO.builder().message(ex.getMessage()).code(ex.getCode()).build();
+        return new ResponseEntity<>(error,HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @ExceptionHandler(value = BranchIsDeletedException.class)
+    public ResponseEntity<ErrorExceptionDTO> branchIsDeletedException(BranchIsDeletedException ex){
+        ErrorExceptionDTO error = ErrorExceptionDTO.builder().message(ex.getMessage()).code(ex.getCode()).build();
+        return new ResponseEntity<>(error,HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @ExceptionHandler(value = ProductIsDeletedException.class)
+    public ResponseEntity<ErrorExceptionDTO> productIsDeletedException(ProductIsDeletedException ex){
+        ErrorExceptionDTO error = ErrorExceptionDTO.builder().message(ex.getMessage()).code(ex.getCode()).build();
+        return new ResponseEntity<>(error,HttpStatus.NOT_ACCEPTABLE);
+    }
+
     @ExceptionHandler(value = NotFoundSellException.class)
     public ResponseEntity<ErrorExceptionDTO> notFoundSellException(NotFoundSellException ex){
         ErrorExceptionDTO error = ErrorExceptionDTO.builder().message(ex.getMessage()).code(ex.getCode()).build();
@@ -28,7 +58,7 @@ public class AdviceController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = NotEnoughStock.class)
     public ResponseEntity<ErrorExceptionDTO> notEnoughStockExceptionHandler(NotEnoughStock ex){
         ErrorExceptionDTO error = ErrorExceptionDTO.builder().message(ex.getMessage()).code(ex.getCode()).build();
-        return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(error,HttpStatus.NOT_ACCEPTABLE);
     }
 
     @ExceptionHandler(value = NotFoundStoreException.class)

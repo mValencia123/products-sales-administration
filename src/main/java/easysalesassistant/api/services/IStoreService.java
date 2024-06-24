@@ -12,4 +12,5 @@ public interface IStoreService {
     StoreDTO getStoreById(Long idStore);
     void deleteStoreById(Long idStore);
     List<StoreDTO> getStores();
+    void storeIsDeleted(Store store);
 }

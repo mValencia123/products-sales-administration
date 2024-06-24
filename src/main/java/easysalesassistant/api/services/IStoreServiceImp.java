@@ -6,6 +6,7 @@ import easysalesassistant.api.entity.Address;
 import easysalesassistant.api.entity.Store;
 import easysalesassistant.api.entity.SystemUser;
 import easysalesassistant.api.exceptions.NotFoundStoreException;
+import easysalesassistant.api.exceptions.StoreIsDeletedException;
 import easysalesassistant.api.mappers.StoreMapper;
 import easysalesassistant.api.utils.StreamOperation;
 import org.springframework.stereotype.Service;
@@ -51,6 +52,7 @@ public class IStoreServiceImp implements IStoreService {
     @Override
     public StoreDTO updateStore(Long idStore,StoreDTO storeDTO) {
         Store store = existsStoreById(idStore);
+        this.storeIsDeleted(store);
         Address address = addressService.updateAddress(storeDTO.getAddress().getId(),storeDTO.getAddress());
 
         store.setDescription(storeDTO.getDescription());
@@ -69,12 +71,15 @@ public class IStoreServiceImp implements IStoreService {
 
     @Override
     public StoreDTO getStoreById(Long idStore) {
-        return this.storeMapper.storeToStoreDTO(existsStoreById(idStore));
+        Store store = existsStoreById(idStore);
+        this.storeIsDeleted(store);
+        return this.storeMapper.storeToStoreDTO(store);
     }
 
     @Override
     public void deleteStoreById(Long idStore) {
         Store store = existsStoreById(idStore);
+        this.storeIsDeleted(store);
         SystemUser userDeleted = userService.getUserByContext();
 
         store.setDeleted(true);
@@ -91,5 +96,10 @@ public class IStoreServiceImp implements IStoreService {
                 .filter((s) -> !s.isDeleted())
                 .map(storeMapper::storeToStoreDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void storeIsDeleted(Store store) {
+        if(store.isDeleted()) throw new StoreIsDeletedException(403,"The store is not longer active.");
     }
 }

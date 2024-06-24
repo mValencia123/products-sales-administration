@@ -6,6 +6,7 @@ import easysalesassistant.api.entity.Address;
 import easysalesassistant.api.entity.Provider;
 import easysalesassistant.api.entity.SystemUser;
 import easysalesassistant.api.exceptions.NotFoundProviderException;
+import easysalesassistant.api.exceptions.ProviderIsDeletedException;
 import easysalesassistant.api.mappers.ProviderMapper;
 import easysalesassistant.api.utils.StreamOperation;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,7 @@ public class IProviderServiceImp implements IProviderService {
     @Transactional
     public ProviderDTO patchProvider(Long id, ProviderDTO providerDTO) {
         Provider provider = existsProviderById(id);
+        this.providerIsDeleted(provider);
         Address address = addressService.updateAddress(provider.getIdAddress().getId(),providerDTO.getAddress());
         provider.setFirstName(providerDTO.getFirstName());
         provider.setLastName(provider.getLastName());
@@ -54,11 +56,13 @@ public class IProviderServiceImp implements IProviderService {
     @Override
     public ProviderDTO getProviderDTOById(Long id) {
         Provider provider = existsProviderById(id);
+        this.providerIsDeleted(provider);
         return ProviderMapper.INSTANCE.providerToProviderDTO(provider);
     }
     @Override
     public void deleteProvider(Long id) {
         Provider provider = existsProviderById(id);
+        this.providerIsDeleted(provider);
         SystemUser systemUser = userService.getUserByContext();
 
         provider.setDeleted(true);
@@ -79,5 +83,10 @@ public class IProviderServiceImp implements IProviderService {
                 .filter((p) -> !p.isDeleted())
                 .map(ProviderMapper.INSTANCE::providerToProviderDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void providerIsDeleted(Provider provider) {
+        if(provider.isDeleted()) throw new ProviderIsDeletedException(403,"The provider is not longer active.");
     }
 }

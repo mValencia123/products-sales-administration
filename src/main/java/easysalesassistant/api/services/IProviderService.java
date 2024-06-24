@@ -12,4 +12,5 @@ public interface IProviderService {
     void deleteProvider(Long id);
     Provider existsProviderById(Long id);
     List<ProviderDTO> getProviders();
+    void providerIsDeleted(Provider provider);
 }

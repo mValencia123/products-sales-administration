@@ -10,10 +10,7 @@ import easysalesassistant.api.entity.Branch;
 import easysalesassistant.api.entity.Role;
 import easysalesassistant.api.entity.SystemUser;
 import easysalesassistant.api.enums.TypeUser;
-import easysalesassistant.api.exceptions.NotFoundBranchException;
-import easysalesassistant.api.exceptions.NotFoundSystemUserException;
-import easysalesassistant.api.exceptions.UserDisabledException;
-import easysalesassistant.api.exceptions.UserNameAlreadyExistsException;
+import easysalesassistant.api.exceptions.*;
 import easysalesassistant.api.mappers.SystemUserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +55,7 @@ public class ISystemUserServiceImp implements UserDetailsService, ISystemUserSer
     private Logger logger = LoggerFactory.getLogger(ISystemUserServiceImp.class);
 
 
-    @Transactional(readOnly = false)
+    @Transactional
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         SystemUser user = userDAO.findByUserName(username);
@@ -76,6 +73,7 @@ public class ISystemUserServiceImp implements UserDetailsService, ISystemUserSer
     }
 
     @Override
+    @Transactional
     public SystemUserDTO saveUser(SystemUserDTO systemUserDTO) {
         SystemUser userExists = userDAO.findByUserName(systemUserDTO.getUserName());
         if(userExists != null){
@@ -117,11 +115,18 @@ public class ISystemUserServiceImp implements UserDetailsService, ISystemUserSer
     }
 
     @Override
+    @Transactional
     public SystemUserDTO patchUser(Long idUser, SystemUserDTO systemUserDTO) {
         SystemUser systemUser = existsSystemUser(idUser);
-        Address address = addressService.updateAddress(systemUser.getIdAddress().getId(),systemUserDTO.getAddress());
+        if(systemUser == null){
+            throw new NotFoundSystemUserException(404,"System user's ID doesn't exists.");
+        }
+        this.userIsDeleted(systemUser);
         Branch branch = branchService.existsBranchById(systemUserDTO.getIdBranch());
+        if(branch == null) throw new NotFoundBranchException(404,"Branch's ID doesn't exists.");
+        branchService.branchIsDeleted(branch);
 
+        Address address = addressService.updateAddress(systemUser.getIdAddress().getId(),systemUserDTO.getAddress());
         systemUser.setFirstName(systemUserDTO.getName());
         systemUser.setLastName(systemUserDTO.getLastName());
         systemUser.setRfc(systemUserDTO.getRfc());
@@ -147,6 +152,9 @@ public class ISystemUserServiceImp implements UserDetailsService, ISystemUserSer
     @Override
     public void deleteUser(Long idUser) {
         SystemUser systemUser = userDAO.findById(idUser).orElseThrow(() -> new NotFoundSystemUserException(404,"User's Id doesn't exists."));
+        if(!systemUser.isEnabled()){
+            throw new UserDisabledException(404,"The user you try to modify is not longer active.");
+        }
         SystemUser systemUserDeleted = getUserByContext();
 
         systemUser.setEnabled(false);
@@ -178,6 +186,11 @@ public class ISystemUserServiceImp implements UserDetailsService, ISystemUserSer
     @Override
     public SystemUser getSystemUserById(Long idUser) {
         return userDAO.findById(idUser).orElse(null);
+    }
+
+    @Override
+    public void userIsDeleted(SystemUser systemUser) {
+        if(!systemUser.isEnabled()) throw new UserDisabledException(404,"The user you try to modify is not longer active.");
     }
 
     /*@KafkaListener(topics = "test-topic",groupId = "default")

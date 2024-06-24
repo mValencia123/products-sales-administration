@@ -13,4 +13,5 @@ public interface IBranchService {
     void deleteBranch(Long idBranch);
     Branch existsBranchById(Long idBranch);
     List<BranchDTO> getBranches();
+    void branchIsDeleted(Branch branch);
 }

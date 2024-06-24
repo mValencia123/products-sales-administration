@@ -1,24 +1,19 @@
 package easysalesassistant.api.services;
 
-import easysalesassistant.api.context.UserContext;
 import easysalesassistant.api.dao.IProductDAO;
-import easysalesassistant.api.dao.IUserDAO;
 import easysalesassistant.api.dto.product.ProductDTO;
 import easysalesassistant.api.entity.Product;
 import easysalesassistant.api.entity.Store;
 import easysalesassistant.api.entity.SystemUser;
 import easysalesassistant.api.exceptions.NotFoundProductException;
-import easysalesassistant.api.exceptions.NotFoundSystemUserException;
+import easysalesassistant.api.exceptions.ProductIsDeletedException;
 import easysalesassistant.api.mappers.ProductMapper;
 import easysalesassistant.api.utils.StreamOperation;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Spliterator;
-import java.util.Spliterators;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class IProductServiceImp implements IProductService {
@@ -36,6 +31,7 @@ public class IProductServiceImp implements IProductService {
 
     public ProductDTO getProduct(Long id){
         Product product = existsProductById(id);
+        productIsDeleted(product);
         ProductDTO productDTO = productMapper.productToProductDTO(product);
         return productDTO;
     }
@@ -50,6 +46,7 @@ public class IProductServiceImp implements IProductService {
 
     public ProductDTO updateProduct(Long id, ProductDTO product){
         Product p = existsProductById(id);
+        productIsDeleted(p);
         p.setItemCode(product.getItemCode());
         p.setBarCode(product.getBarCode());
         p.setName(product.getName());
@@ -66,6 +63,7 @@ public class IProductServiceImp implements IProductService {
 
     public void deleteProduct(Long id){
         Product p = existsProductById(id);
+        productIsDeleted(p);
         SystemUser systemUser = userService.getUserByContext();
         p.setIdUserDeleted(systemUser);
         p.setDeletedAt(new Date());
@@ -85,6 +83,13 @@ public class IProductServiceImp implements IProductService {
     public boolean productHasStock(Long id, Store idStore, int amount) {
         Product product = existsProductById(id);
         return stockService.productHasStockAt(product,idStore,amount);
+    }
+
+    @Override
+    public void productIsDeleted(Product product) {
+        if(!product.isDeleted()){
+            throw new ProductIsDeletedException(404,"The product you try to modify is not longer active.");
+        }
     }
 
     public Product existsProductById(Long id){

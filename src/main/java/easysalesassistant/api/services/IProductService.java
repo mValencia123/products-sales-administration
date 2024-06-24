@@ -1,6 +1,7 @@
 package easysalesassistant.api.services;
 
 import easysalesassistant.api.dto.product.ProductDTO;
+import easysalesassistant.api.entity.Product;
 import easysalesassistant.api.entity.Provider;
 import easysalesassistant.api.entity.Store;
 
@@ -13,4 +14,5 @@ public interface IProductService {
     void deleteProduct(Long id);
     List<ProductDTO> getProducts();
     boolean productHasStock(Long id, Store idStore, int amount);
+    void productIsDeleted(Product product);
 }
